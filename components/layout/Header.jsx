@@ -20,7 +20,7 @@ import { usePathname } from "next/navigation";
 // import { verifyMessage } from "@/services/checkSIWE";
 // import MButton from "@/components/Button";
 // import { getHostNftContract } from "@/app/contracts/HostNFTContractHelper";
-// import { ConnectKitButton } from "connectkit";
+import { ConnectKitButton } from "connectkit";
 
 const HeaderMenuItem = ({ label, href, onClose }) => {
   const pathname = usePathname();
@@ -149,6 +149,7 @@ export const Header = () => {
             gap="0"
           >
             <HStack>
+              <ConnectKitButton />
               {/* <ConnectKitButton.Custom>
                 {({ isConnected, show, truncatedAddress }) => {
                   if (isConnected !== isWalletConnected) {
@@ -216,6 +217,7 @@ export const Header = () => {
                         />
                       </Flex>
                     ))}
+                    <ConnectKitButton />
                     {/* <ConnectKitButton.Custom>
                       {({ isConnected, show, truncatedAddress }) => {
                         if (isConnected !== isWalletConnected) {

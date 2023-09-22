@@ -36,6 +36,12 @@
     "@reduxjs/toolkit": "^1.9.5",
     "phaser3spectorjs": "^0.0.8",
     "crypto-js": "^4.1.1",
-    "buffer": "^6.0.3"
+    "buffer": "^6.0.3",
+    "viem": "^1.10.3",
+    "wagmi": "^1.4.1",
+    "connectkit": "^1.5.2",
+    "lokijs": "^1.5.12",
+    "encoding": "^0.1.13",
+    "pino-pretty": "^10.2.0"
   }
 }
