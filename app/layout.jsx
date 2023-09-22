@@ -1,5 +1,6 @@
 import "./globals.css";
-import { Layout } from "@/components/layout";
+import { Layout } from "../components/layout";
+import { primary } from "./fonts";
 
 import "@fontsource/rajdhani/500.css";
 import "@fontsource/rajdhani/600.css";
@@ -13,7 +14,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="bg-black">
+      <body className={`bg-black ${primary.className}`}>
         <Layout>{children}</Layout>
       </body>
     </html>

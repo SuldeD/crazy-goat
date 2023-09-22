@@ -108,7 +108,7 @@ export default function MainTitle() {
             fontWeight="700"
             position="absolute"
             left="12"
-            top="1"
+            top="2"
             fontSize="18"
             fontFamily="primary"
             textColor="white"

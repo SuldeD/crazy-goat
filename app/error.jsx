@@ -2,9 +2,9 @@
 
 export default function Error({ reset }) {
   return (
-    <div className="mx-auto my-4 flex max-w-xl flex-col rounded-lg border border-neutral-200 bg-white p-8 dark:border-neutral-800 dark:bg-black md:p-12">
-      <h2 className="text-xl font-bold">Oh no!</h2>
-      <p className="my-2">
+    <div className="mx-auto my-4 flex max-w-xl flex-col rounded-[20px] border-[0.1px] border-white p-8  md:p-12">
+      <h2 className="text-xl font-bold text-white">Oh no!</h2>
+      <p className="my-2 text-white">
         There was an issue with our storefront. This could be a temporary issue,
         please try your action again.
       </p>

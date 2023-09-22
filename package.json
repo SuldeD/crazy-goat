@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.11.0",
     "@fontsource/rajdhani": "^5.0.8",
     "autoprefixer": "10.4.16",
+    "dotenv": "^16.3.1",
     "eslint": "8.49.0",
     "eslint-config-next": "13.5.2",
     "framer-motion": "^10.16.4",
