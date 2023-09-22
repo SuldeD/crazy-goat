@@ -136,26 +136,28 @@ export const MCard = ({ id, Tg }) => {
   );
 };
 
-export async function getTournaments({ TAGS }) {
-  const res = await fetch(
-    "https://api-game.mongolnft.com/api/tournoments-web3/?type=active",
-    {
-      next: { tags: [TAGS] },
-      cache: "no-cache",
-    }
-  );
+// export async function getTournaments({ TAGS }) {
+//   const res = await fetch(
+//     "https://api-game.mongolnft.com/api/tournoments-web3/?type=active",
+//     {
+//       next: { tags: [TAGS] },
+//       cache: "no-cache",
+//     }
+//   );
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
+//   if (!res.ok) {
+//     throw new Error("Failed to fetch data");
+//   }
 
-  return res.json();
-}
+//   return res.json();
+// }
 
 export const Tournaments = async () => {
-  const products = await getTournaments({ TAGS: "tournaments" });
+  // const products = await getTournaments({ TAGS: "tournaments" });
 
-  if (!products?.data?.tournoments?.length) return null;
+  const products = [];
+
+  // if (!products?.data?.tournoments?.length) return null;
 
   return (
     <Stack mt="32">
