@@ -11,6 +11,7 @@
   color: white;
   border: 1px solid white;
   background: black;
+
   transform-style: preserve-3d;
   transition: all 175ms cubic-bezier(0, 0, 1, 1);
 }

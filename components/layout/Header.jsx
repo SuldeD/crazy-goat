@@ -21,6 +21,7 @@ import { usePathname } from "next/navigation";
 // import MButton from "@/components/Button";
 // import { getHostNftContract } from "@/app/contracts/HostNFTContractHelper";
 import { ConnectKitButton } from "connectkit";
+import MButton from "components/Button";
 
 const HeaderMenuItem = ({ label, href, onClose }) => {
   const pathname = usePathname();
@@ -125,7 +126,7 @@ export const Header = () => {
             justifyContent={["flex-start", "flex-start", "center"]}
             h="100%"
           >
-            <Link href="/" passHref>
+            <Link href="/">
               <Text
                 fontSize={["32", null, "32"]}
                 fontFamily="primary"
@@ -149,12 +150,12 @@ export const Header = () => {
             gap="0"
           >
             <HStack>
-              <ConnectKitButton />
-              {/* <ConnectKitButton.Custom>
+              {/* <ConnectKitButton /> */}
+              <ConnectKitButton.Custom>
                 {({ isConnected, show, truncatedAddress }) => {
-                  if (isConnected !== isWalletConnected) {
-                    setIsWalletConnected(isConnected);
-                  }
+                  // if (isConnected !== isWalletConnected) {
+                  //   setIsWalletConnected(isConnected);
+                  // }
                   return (
                     <MButton
                       text={isConnected ? truncatedAddress : "Connect Wallet"}
@@ -162,7 +163,7 @@ export const Header = () => {
                     />
                   );
                 }}
-              </ConnectKitButton.Custom> */}
+              </ConnectKitButton.Custom>
             </HStack>
           </HStack>
 
@@ -217,12 +218,12 @@ export const Header = () => {
                         />
                       </Flex>
                     ))}
-                    <ConnectKitButton />
-                    {/* <ConnectKitButton.Custom>
+                    {/* <ConnectKitButton /> */}
+                    <ConnectKitButton.Custom>
                       {({ isConnected, show, truncatedAddress }) => {
-                        if (isConnected !== isWalletConnected) {
-                          setIsWalletConnected(isConnected);
-                        }
+                        // if (isConnected !== isWalletConnected) {
+                        //   setIsWalletConnected(isConnected);
+                        // }
                         return (
                           <MButton
                             text={
@@ -232,7 +233,7 @@ export const Header = () => {
                           />
                         );
                       }}
-                    </ConnectKitButton.Custom> */}
+                    </ConnectKitButton.Custom>
                   </Stack>
                 </DrawerBody>
               </DrawerContent>

@@ -17,9 +17,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { AiFillHeart, AiFillStar, AiFillTrophy } from "react-icons/ai";
 import { MdAccessTimeFilled } from "react-icons/md";
 import { BsGiftFill } from "react-icons/bs";
-// import { buyLifeAPI } from "@/services/getService";
-// import { getTournamentContract } from "../contracts/TournamentContractHelper";
-// import { parse18 } from "../contracts/helpers";
+import { buyLifeAPI } from "../../services/getService";
+import { getTournamentContract } from "../../contracts/TournamentContractHelper";
+import { parse18 } from "../../contracts/helpers";
 import MInput from "../../components/Input";
 import * as Yup from "yup";
 import { useEffect, useState } from "react";
@@ -28,7 +28,7 @@ export const Detail = ({
   data,
   games,
   gameDetail,
-  // updateTournomentDetailData,
+  updateTournomentDetailData,
 }) => {
   const router = useRouter();
   const navigate = usePathname();
@@ -68,47 +68,47 @@ export const Detail = ({
     return () => clearInterval(countdownInterval);
   }, [end_datetime]);
 
-  // const handleBuyLife = async (values) => {
-  //   try {
-  //     const { count } = values;
-  //     let { tournamentWriteContract } = await getTournamentContract(
-  //       data.address
-  //     );
-  //     let price = parse18(parseFloat(count / 100));
-  //     const tx = await tournamentWriteContract.deposit({
-  //       value: price,
-  //     });
-  //     await tx.wait();
+  const handleBuyLife = async (values) => {
+    try {
+      const { count } = values;
+      const { tournamentWriteContract } = await getTournamentContract(
+        data.address
+      );
+      const price = parse18(parseFloat(count / 100));
+      const tx = await tournamentWriteContract.deposit({
+        value: price,
+      });
+      await tx.wait();
 
-  //     let info = JSON.stringify({
-  //       transaction_hash: tx.hash,
-  //       chain: "polygon",
-  //       tournoment_id: data.id,
-  //     });
+      const info = JSON.stringify({
+        transaction_hash: tx.hash,
+        chain: "polygon",
+        tournoment_id: data.id,
+      });
 
-  //     const res = await buyLifeAPI(info);
+      const res = await buyLifeAPI(info);
 
-  //     toast({
-  //       title: "Success",
-  //       description: `Success`,
-  //       status: "success",
-  //       duration: 9000,
-  //       isClosable: true,
-  //     });
-  //     updateTournomentDetailData();
-  //     return res;
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast({
-  //       title: "Not buy life.",
-  //       description: `${err.reason}`,
-  //       status: "error",
-  //       duration: 9000,
-  //       isClosable: true,
-  //     });
-  //     return null;
-  //   }
-  // };
+      toast({
+        title: "Success",
+        description: `Success`,
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+      updateTournomentDetailData();
+      return res;
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Not buy life.",
+        description: `${err.reason}`,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return null;
+    }
+  };
 
   const lifeSchema = Yup.object().shape({
     count: Yup.string().required("Required"),
@@ -266,7 +266,7 @@ export const Detail = ({
           </Stack>
 
           <Stack
-            w={["100%", "100%", "48%", "70%"]}
+            w={["100%", "100%", "48%", "71.5%"]}
             borderRadius="20px"
             bg="whiteAlpha.100"
             px="6"
@@ -298,25 +298,25 @@ export const Detail = ({
               </Text>
               <Text color="white">
                 <b className="text-[#deff1a]">1.</b>
-                {`Begin by navigating to the
+                {`  Begin by navigating to the
                 event you want to participate in.`}
                 <br />
-                <b className="text-[#deff1a]">2.</b>{" "}
-                {`In the "Life" section,
+                <b className="text-[#deff1a]">2.</b>
+                {`  In the "Life" section,
                 input the quantity of lives you want to purchase, ensuring it
                 falls within the range of 1 to 100.`}
                 <br />
                 <b className="text-[#deff1a]">3.</b>
-                {`When ready, click on "Buy
+                {`  When ready, click on "Buy
                 Life"`}
-                <br /> <b className="text-[#deff1a]">4.</b>{" "}
-                {`Carefully review the
+                <br /> <b className="text-[#deff1a]">4.</b>
+                {`  Carefully review the
                 MetaMask pop-up window, ensuring your agreement with the
                 associated fees for acquiring Matic. If in agreement, click
                 "Confirm."`}
                 <br />
-                <b className="text-[#deff1a]">5.</b>{" "}
-                {`Following the confirmation,
+                <b className="text-[#deff1a]">5.</b>
+                {`  Following the confirmation,
                 your purchased lives will be displayed under the "Life" section.`}
               </Text>
             </Stack>
@@ -325,11 +325,8 @@ export const Detail = ({
                 validationSchema={lifeSchema}
                 initialValues={{ count: "" }}
                 onSubmit={async (values) => {
-                  console.log(values);
-                  // await handleBuyLife(values);
-                  setTimeout(() => {
-                    actions.setSubmitting(false);
-                  }, [1000]);
+                  await handleBuyLife(values);
+                  actions.setSubmitting(false);
                 }}
               >
                 {(props) => (
@@ -367,7 +364,7 @@ export const Detail = ({
           </Stack>
 
           {data?.id == "37" && (
-            <GridItem colSpan={12} rounded="20px" mt="4" mb="10">
+            <GridItem colSpan={12} rounded="20px" mt={[0, 0, "4"]} mb="10">
               <Flex
                 borderRadius="20px"
                 bg="whiteAlpha.100"
@@ -391,6 +388,7 @@ export const Detail = ({
                         fontFamily="primary"
                         fontSize="18px"
                         textColor="white"
+                        mb="1"
                       >
                         <BsGiftFill />
                       </Text>
@@ -405,7 +403,7 @@ export const Detail = ({
                       Win a Maral NFT from The Marals NFT collection.
                     </Text>
                   </Stack>
-                  <Text color="white" w="80%" mt="4">
+                  <Text color="white" w={["full", null, "80%"]} mt="4">
                     {`The Mongolian Secret History" begins with, "Borte-chino, who
                     was born from the heavens, and his wife Gua-Maral, who came
                     across the seas and settled in the Burkhan Khaldun
@@ -418,6 +416,7 @@ export const Detail = ({
                   rounded="20px"
                   h="250px"
                   cursor="pointer"
+                  mt={["4", "4", 0]}
                   fit="contain"
                   onClick={() =>
                     window.open(

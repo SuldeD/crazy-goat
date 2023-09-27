@@ -10,6 +10,7 @@ export const MButton = ({ text, isLoading, ...props }) => (
     ) : (
       <Button
         // className="active-button"
+        _hover={{ borderColor: "green.primary" }}
         borderRadius="35px"
         border="1px"
         px="30px"
