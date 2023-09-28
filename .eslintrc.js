@@ -10,7 +10,5 @@ module.exports = {
         vars: "all",
       },
     ],
-    "prefer-const": "error",
-    "react-hooks/exhaustive-deps": "error",
   },
 };

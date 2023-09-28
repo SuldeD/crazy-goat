@@ -1,111 +1,107 @@
 "use client";
 
-// import { useState } from "react";
-// import StickNinja from "../../../games/stick_hero/Ninja";
-// import { Game } from "../../../games/flappy_wolf/Game";
-// import Cookies from "universal-cookie";
-// import { getTournament, getToyInfo } from "@/services/getService";
-// import // AlertDialog,
-// AlertDialogBody,
-// AlertDialogContent,
-// AlertDialogHeader,
-// AlertDialogOverlay,
-// Flex,
-// HStack,
-// Stack,
-// Text,
-// Wrap,
-// useDisclosure,
-// useToast,
-// "@chakra-ui/react";
-// import { AiFillHeart, AiFillStar } from "react-icons/ai";
-// import { Field, Form, Formik } from "formik";
-// import MInput from "../../../../components/Input";
-// import MButton from "../../../../components/Button";
-// import { getTournamentContract } from "@/app/contracts/TournamentContractHelper";
-// import { parse18 } from "@/app/contracts/helpers";
-// import { buyLifeAPI } from "@/services/getService";
-// import * as Yup from "yup";
-// import { useRouter } from "next/navigation";
+import { useState } from "react";
+import StickNinja from "../../../games/stick_hero/Ninja";
+import { Game } from "../../../games/flappy_wolf/Game";
+import Cookies from "universal-cookie";
+import { getTournament, getToyInfo } from "services/getService";
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Flex,
+  HStack,
+  Stack,
+  Text,
+  Wrap,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
+import { AiFillHeart, AiFillStar } from "react-icons/ai";
+import { Field, Form, Formik } from "formik";
+import MInput from "../../../../components/Input";
+import MButton from "../../../../components/Button";
+import { getTournamentContract } from "contracts/TournamentContractHelper";
+import { parse18 } from "contracts/helpers";
+import { buyLifeAPI } from "services/getService";
+import * as Yup from "yup";
+import { useRouter } from "next/navigation";
 
 export const Tournament = async ({ params }) => {
-  console.log(params);
-  // const cookies = new Cookies();
-  // const jwtToken = cookies.get("jwtToken");
-  // const toast = useToast();
-  // const router = useRouter();
+  const cookies = new Cookies();
+  const jwtToken = cookies.get("jwtToken");
+  const toast = useToast();
+  const router = useRouter();
 
-  // const { isOpen, onOpen, onClose } = useDisclosure();
-  // const [tournoment, setTournoment] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [tournoment, setTournoment] = useState("");
 
-  // const toyRes = await getToyInfo({ id: params.slag, jwtToken: jwtToken });
-  // const initialData = await getTournament(params.slag);
+  const toyRes = await getToyInfo({ id: params.slag, jwtToken: jwtToken });
+  const initialData = await getTournament(params.slag);
 
-  // const toyRes = [];
-  // const initialData = [];
+  const data = tournoment.length > 0 ? tournoment : initialData;
 
-  // const data = tournoment.length > 0 ? tournoment : initialData;
-  // const data = [];
+  const updateTournomentDetailData = async () => {
+    try {
+      const data = await getTournament(params.slag);
+      setTournoment(data);
+    } catch (error) {}
+  };
 
-  // const updateTournomentDetailData = async () => {
-  //   try {
-  //     const data = await getTournament(params.slag);
-  //     setTournoment(data);
-  //   } catch (error) {}
-  // };
+  const handleBuyLife = async (values) => {
+    try {
+      const { count } = values;
+      let { tournamentWriteContract } = await getTournamentContract(
+        data?.data?.tournoment?.address
+      );
+      let price = parse18(parseFloat(count / 100));
+      const tx = await tournamentWriteContract.deposit({
+        value: price,
+      });
+      await tx.wait();
 
-  // const handleBuyLife = async (values) => {
-  //   try {
-  //     const { count } = values;
-  //     let { tournamentWriteContract } = await getTournamentContract(
-  //       data?.data?.tournoment?.address
-  //     );
-  //     let price = parse18(parseFloat(count / 100));
-  //     const tx = await tournamentWriteContract.deposit({
-  //       value: price,
-  //     });
-  //     await tx.wait();
+      console.log("tx hash: ", tx.hash, data.id);
 
-  //     console.log("tx hash: ", tx.hash, data.id);
+      let info = JSON.stringify({
+        transaction_hash: tx.hash,
+        chain: "polygon",
+        tournoment_id: data?.data?.tournoment?.id,
+      });
+      const res = await buyLifeAPI(info);
 
-  //     let info = JSON.stringify({
-  //       transaction_hash: tx.hash,
-  //       chain: "polygon",
-  //       tournoment_id: data?.data?.tournoment?.id,
-  //     });
-  //     const res = await buyLifeAPI(info);
+      toast({
+        title: "Success",
+        description: `Success`,
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+      updateTournomentDetailData();
+      onClose();
+      window.location.reload();
+      return res;
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Not buy life.",
+        description: `${err.reason}`,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return null;
+    }
+  };
 
-  //     toast({
-  //       title: "Success",
-  //       description: `Success`,
-  //       status: "success",
-  //       duration: 9000,
-  //       isClosable: true,
-  //     });
-  //     updateTournomentDetailData();
-  //     onClose();
-  //     window.location.reload();
-  //     return res;
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast({
-  //       title: "Not buy life.",
-  //       description: `${err.reason}`,
-  //       status: "error",
-  //       duration: 9000,
-  //       isClosable: true,
-  //     });
-  //     return null;
-  //   }
-  // };
-
-  // const lifeSchema = Yup.object().shape({
-  //   count: Yup.string().required("Required"),
-  // });
+  const lifeSchema = Yup.object().shape({
+    count: Yup.string().required("Required"),
+  });
 
   return (
     <div className="w-full">
-      {/* {params.name == "StickNinja" && (
+      {params.name == "StickNinja" && (
         <StickNinja
           tour_id={params?.slag}
           updateTournomentDetailData={updateTournomentDetailData}
@@ -235,8 +231,7 @@ export const Tournament = async ({ params }) => {
             life={toyRes?.data?.tournoment_user?.tournoment_live}
           />
         </Flex>
-      )} */}
-      test
+      )}
     </div>
   );
 };

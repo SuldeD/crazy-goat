@@ -103,7 +103,7 @@ const buyLifeAPI = async (data) => {
   try {
     const response = await axios.request(config);
     console.log(JSON.stringify(response.data));
-    revalidateTag("tournaments");
+
     return response;
   } catch (error) {
     console.log(error);

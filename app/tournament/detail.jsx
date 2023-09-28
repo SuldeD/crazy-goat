@@ -194,7 +194,7 @@ export const Detail = ({
             >
               <HStack mb="1">
                 <Text fontFamily="primary" fontSize="20px" textColor="white">
-                  Score
+                  My Score
                 </Text>
                 <Text fontFamily="primary" fontSize="18px" textColor="white">
                   <AiFillStar />
