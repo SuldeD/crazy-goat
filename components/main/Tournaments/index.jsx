@@ -17,7 +17,7 @@ import MButton from "../../Button";
 import HeadingText from "../../HeadingText";
 import Text from "../../Text";
 
-export const MCard = ({ id, Tg }) => {
+export function MCard({ id, Tg }) {
   const router = useRouter();
   const [countdown, setCountdown] = useState({
     days: 0,
@@ -135,9 +135,9 @@ export const MCard = ({ id, Tg }) => {
       </CardBody>
     </Card>
   );
-};
+}
 
-export const Tournaments = async () => {
+export default async function Tournaments() {
   const products = await getTournaments();
 
   if (!products?.data?.tournoments?.length) return null;
@@ -163,6 +163,4 @@ export const Tournaments = async () => {
       </Wrap>
     </Stack>
   );
-};
-
-export default Tournaments;
+}

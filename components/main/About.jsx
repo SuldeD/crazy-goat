@@ -20,39 +20,41 @@ const data = [
   },
 ];
 
-export const Item = ({ data, id }) => (
-  <>
-    <HStack justify="center">
-      <Image src={data?.img} w="30px" h="30px" alt={`${data.name} image`} />
-    </HStack>
-    <HStack justify="center" mt="4">
-      <Text
-        fontSize={["xl", "3xl", "3xl"]}
-        fontWeight="700"
-        p="4"
-        textColor="black"
-        fontFamily="primary"
-        background={id == 1 ? "yellow.primary" : "cyan.primary"}
-      >
-        {data?.title}
-      </Text>
-    </HStack>
+export function Item({ data, id }) {
+  return (
+    <>
+      <HStack justify="center">
+        <Image src={data?.img} w="30px" h="30px" alt={`${data.name} image`} />
+      </HStack>
+      <HStack justify="center" mt="4">
+        <Text
+          fontSize={["xl", "3xl", "3xl"]}
+          fontWeight="700"
+          p="4"
+          textColor="black"
+          fontFamily="primary"
+          background={id == 1 ? "yellow.primary" : "cyan.primary"}
+        >
+          {data?.title}
+        </Text>
+      </HStack>
 
-    <HStack justify="center" mt="4">
-      <Text
-        fontSize={["md", "md", "md"]}
-        fontWeight="400"
-        textColor="white"
-        fontFamily="primary"
-        textAlign="center"
-      >
-        {data?.desc}
-      </Text>
-    </HStack>
-  </>
-);
+      <HStack justify="center" mt="4">
+        <Text
+          fontSize={["md", "md", "md"]}
+          fontWeight="400"
+          textColor="white"
+          fontFamily="primary"
+          textAlign="center"
+        >
+          {data?.desc}
+        </Text>
+      </HStack>
+    </>
+  );
+}
 
-export const About = () => {
+export default function About() {
   return (
     <Stack mt="100px">
       <HStack display="inline-grid">
@@ -84,6 +86,4 @@ export const About = () => {
       </Grid>
     </Stack>
   );
-};
-
-export default About;
+}
