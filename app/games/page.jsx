@@ -1,7 +1,7 @@
 "use client";
 
 import MText from "../../components/Text";
-import { MCard } from "../../components/Main/Tournaments";
+import { MCard } from "components/Main/Tournaments";
 import { getTournaments } from "../../services/getService";
 import { Flex, Stack, WrapItem } from "@chakra-ui/react";
 import ToysCard from "./ToysCard";

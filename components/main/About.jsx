@@ -85,3 +85,5 @@ export const About = () => {
     </Stack>
   );
 };
+
+export default About;
