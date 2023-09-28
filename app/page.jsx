@@ -1,6 +1,6 @@
-import About from "components/Main/About";
-import MainTitle from "components/Main/MainTitle";
-import Tournaments from "components/Main/Tournaments";
+import About from "../components/Main/About";
+import MainTitle from "../components/Main/MainTitle";
+import Tournaments from "../components/Main/Tournaments/index";
 
 export const metadata = {
   title: "Create Next App",
