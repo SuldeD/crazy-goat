@@ -1,3 +1,4 @@
+import { getTournaments } from "services/getService";
 import About from "../components/main/About";
 import MainTitle from "../components/main/MainTitle";
 import Tournaments from "../components/main/Tournaments/index";
@@ -8,44 +9,15 @@ export const metadata = {
 };
 
 export default async function Home() {
-  const res = await fetch(
-    `https://api-game.mongolnft.com/api/tournoments-web3/?type=active`,
-    {
-      next: { tags: ["tournaments"] },
-      cache: "no-cache",
-    }
-  );
+  const products = await getTournaments();
 
-  if (!res.ok) {
-    return new Error("Failed to fetch data");
-  }
-
-  const tournaments = res.json();
-
-  console.log(tournaments, "tournaments");
+  if (!products?.data?.tournoments?.length) return null;
 
   return (
     <>
       <MainTitle />
       <About />
-      <Tournaments />
+      <Tournaments products={products} />
     </>
   );
 }
-
-// export const getStaticProps = async () => {
-//   const res = await fetch(
-//     `https://api-game.mongolnft.com/api/tournoments-web3/?type=active`,
-//     {
-//       next: { tags: ["tournaments"] },
-//       cache: "no-cache",
-//     }
-//   );
-
-//   if (!res.ok) {
-//     return new Error("Failed to fetch data");
-//   }
-
-//   const tournaments = res.json();
-//   return { props: { tournaments } };
-// };

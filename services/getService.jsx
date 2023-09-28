@@ -1,5 +1,5 @@
 import axios from "axios";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import Cookies from "universal-cookie";
 
 const GAME_DOMAIN = "https://api-game.mongolnft.com/";
@@ -10,7 +10,7 @@ const jwtToken = cookies.get("jwtToken");
 export async function getTournaments() {
   const res = await fetch(`${GAME_DOMAIN}api/tournoments-web3/?type=active`, {
     next: { tags: ["tournaments"] },
-    cache: "no-cache",
+    cache: "no-store",
   });
 
   if (!res.ok) {
@@ -47,7 +47,7 @@ const getToyInfo = async ({ id, jwtToken }) => {
     `https://api-game.mongolnft.com/api/tournoments-user-web3/`,
     {
       method: "POST",
-      cache: "no-cache",
+      cache: "no-store",
       headers: {
         Authorization: `JWT ${jwtToken}`,
         "Content-Type": "application/json",
@@ -65,7 +65,7 @@ async function getTournament(id) {
     {
       method: "GET",
       next: { tags: ["tournament"] },
-      cache: "no-cache",
+      cache: "no-store",
       headers: {
         // Authorization: `JWT ${jwtToken}`,
         "Content-Type": "application/json",
@@ -78,7 +78,7 @@ async function getTournament(id) {
 const getToys = async (id) => {
   const res = await fetch(`https://api-game.mongolnft.com/api/toys/`, {
     method: "GET",
-    cache: "no-cache",
+    cache: "no-store",
     headers: {
       // Authorization: `JWT ${jwtToken}`,
       "Content-Type": "application/json",
@@ -103,6 +103,7 @@ const buyLifeAPI = async (data) => {
   try {
     const response = await axios.request(config);
     console.log(JSON.stringify(response.data));
+    revalidateTag("tournaments");
     return response;
   } catch (error) {
     console.log(error);

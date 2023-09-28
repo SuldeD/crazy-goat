@@ -14,12 +14,10 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { useMemo } from "react";
 import { usePathname } from "next/navigation";
-// import { useEffect, useMemo, useState } from "react";
-// import { verifyMessage } from "@/services/checkSIWE";
-// import MButton from "@/components/Button";
-// import { getHostNftContract } from "@/app/contracts/HostNFTContractHelper";
+import { useEffect, useMemo, useState } from "react";
+import { verifyMessage } from "../../services/checkSIWE";
+import { getHostNftContract } from "../../contracts/HostNFTContractHelper";
 import { ConnectKitButton } from "connectkit";
 import MButton from "components/Button";
 
@@ -52,62 +50,55 @@ const HeaderMenuItem = ({ label, href, onClose }) => {
 
 export const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // const [isWalletConnected, setIsWalletConnected] = useState(false);
-  // const [userHost, setUserHost] = useState(false);
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [userHost, setUserHost] = useState(false);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const { hostNftReadContract } = await getHostNftContract();
-  //       const balance = await hostNftReadContract.balanceOf(
-  //         window.ethereum.selectedAddress
-  //       );
-  //       setUserHost(balance?.toNumber() > 0);
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { hostNftReadContract } = await getHostNftContract();
+        const balance = await hostNftReadContract.balanceOf(
+          window.ethereum.selectedAddress
+        );
+        setUserHost(balance?.toNumber() > 0);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-  //   fetchData();
-  // }, []);
+    fetchData();
+  }, []);
 
-  // const MENU_ITEMS = userHost
-  //   ? [
-  //       { label: "Home", href: "/" },
-  //       { label: "Games", href: "/games" },
-  //       { label: "Ranking", href: "/ranking" },
-  //       { label: "Create", href: "/create" },
-  //     ]
-  //   : [
-  //       { label: "Home", href: "/" },
-  //       { label: "Games", href: "/games" },
-  //       { label: "Ranking", href: "/ranking" },
-  //       { label: "Host", href: "/host" },
-  //     ];
+  const MENU_ITEMS = userHost
+    ? [
+        { label: "Home", href: "/" },
+        { label: "Games", href: "/games" },
+        { label: "Ranking", href: "/ranking" },
+        { label: "Create", href: "/create" },
+      ]
+    : [
+        { label: "Home", href: "/" },
+        { label: "Games", href: "/games" },
+        { label: "Ranking", href: "/ranking" },
+        { label: "Host", href: "/host" },
+      ];
 
-  const MENU_ITEMS = [
-    { label: "Home", href: "/" },
-    { label: "Games", href: "/games" },
-    { label: "Ranking", href: "/ranking" },
-    { label: "Host", href: "/host" },
-  ];
+  const shouldExecuteVerifyMessage = () => {
+    const lastExecutionTime = localStorage.getItem("lastExecutionTime");
+    const currentTime = Date.now();
 
-  // const shouldExecuteVerifyMessage = () => {
-  //   const lastExecutionTime = localStorage.getItem("lastExecutionTime");
-  //   const currentTime = Date.now();
+    if (!lastExecutionTime) {
+      return true;
+    }
+    return currentTime - lastExecutionTime > 1 * 60 * 60 * 1000;
+  };
 
-  //   if (!lastExecutionTime) {
-  //     return true;
-  //   }
-  //   return currentTime - lastExecutionTime > 1 * 60 * 60 * 1000;
-  // };
-
-  // useEffect(() => {
-  //   if (isWalletConnected && shouldExecuteVerifyMessage()) {
-  //     verifyMessage();
-  //     localStorage.setItem("lastExecutionTime", Date.now().toString());
-  //   }
-  // }, [isWalletConnected]);
+  useEffect(() => {
+    if (isWalletConnected && shouldExecuteVerifyMessage()) {
+      verifyMessage();
+      localStorage.setItem("lastExecutionTime", Date.now().toString());
+    }
+  }, [isWalletConnected]);
 
   return (
     <Stack w="100%" gap="22px" alignItems="center">
@@ -150,12 +141,11 @@ export const Header = () => {
             gap="0"
           >
             <HStack>
-              {/* <ConnectKitButton /> */}
               <ConnectKitButton.Custom>
                 {({ isConnected, show, truncatedAddress }) => {
-                  // if (isConnected !== isWalletConnected) {
-                  //   setIsWalletConnected(isConnected);
-                  // }
+                  if (isConnected !== isWalletConnected) {
+                    setIsWalletConnected(isConnected);
+                  }
                   return (
                     <MButton
                       text={isConnected ? truncatedAddress : "Connect Wallet"}
@@ -218,12 +208,12 @@ export const Header = () => {
                         />
                       </Flex>
                     ))}
-                    {/* <ConnectKitButton /> */}
+
                     <ConnectKitButton.Custom>
                       {({ isConnected, show, truncatedAddress }) => {
-                        // if (isConnected !== isWalletConnected) {
-                        //   setIsWalletConnected(isConnected);
-                        // }
+                        if (isConnected !== isWalletConnected) {
+                          setIsWalletConnected(isConnected);
+                        }
                         return (
                           <MButton
                             text={

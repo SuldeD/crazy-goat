@@ -11,9 +11,7 @@ export const Tournament = async ({ params }) => {
   const [tournoment, setTournoment] = useState("");
 
   const toyRes = await getToyInfo({ id: params.slag, jwtToken: jwtToken });
-  const initialData = await getTournament(params.slag);
-
-  const data = tournoment.length > 0 ? tournoment : initialData;
+  const data = await getTournament(params.slag);
 
   const updateTournomentDetailData = async () => {
     try {
@@ -29,6 +27,7 @@ export const Tournament = async ({ params }) => {
         games={data?.data?.tour_toy_configs}
         gameDetail={toyRes?.data?.tournoment_user}
         updateTournomentDetailData={updateTournomentDetailData}
+        tournoment={tournoment}
       />
     </div>
   );

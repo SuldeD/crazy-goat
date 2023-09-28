@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getTournaments } from "services/getService";
+import { verifyMessage } from "services/checkSIWE";
 import MButton from "../../Button";
 import HeadingText from "../../HeadingText";
 import Text from "../../Text";
@@ -128,7 +128,10 @@ export function MCard({ id, Tg }) {
             <MButton
               text={"View Games"}
               w={["full", "100%", "50%", "20%"]}
-              onClick={() => router.push(`tournament/${Tg.id}`)}
+              onClick={() => {
+                verifyMessage();
+                router.push(`tournament/${Tg.id}`);
+              }}
             />
           </Flex>
         </Stack>
@@ -137,11 +140,7 @@ export function MCard({ id, Tg }) {
   );
 }
 
-export default async function Tournaments() {
-  const products = await getTournaments();
-
-  if (!products?.data?.tournoments?.length) return null;
-
+export default function Tournaments({ products }) {
   return (
     <Stack mt="32">
       <HeadingText text="Tournaments" />
@@ -164,3 +163,26 @@ export default async function Tournaments() {
     </Stack>
   );
 }
+
+// export async function getStaticProps() {
+//   const res = await fetch(
+//     `https://api-game.mongolnft.com/api/tournoments-web3/?type=active`,
+//     {
+//       next: { tags: ["tournaments"] },
+//       cache: "no-store",
+//     }
+//   );
+
+//   if (!res.ok) {
+//     return new Error("Failed to fetch data");
+//   }
+
+//   if (!products?.data?.tournoments?.length) return null;
+
+//   const products = res.json();
+
+//   console.log(products, "tournaments");
+//   return {
+//     products,
+//   };
+// }

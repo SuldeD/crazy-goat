@@ -25,14 +25,17 @@ import * as Yup from "yup";
 import { useEffect, useState } from "react";
 
 export const Detail = ({
-  data,
+  data: initialData,
   games,
   gameDetail,
   updateTournomentDetailData,
+  tournoment,
 }) => {
   const router = useRouter();
   const navigate = usePathname();
   const toast = useToast();
+
+  const data = tournoment.length > 0 ? tournoment : initialData;
 
   const [countdown, setCountdown] = useState({
     days: 0,
@@ -95,6 +98,7 @@ export const Detail = ({
         duration: 9000,
         isClosable: true,
       });
+      // revalidateTag("tournaments");
       updateTournomentDetailData();
       return res;
     } catch (error) {
