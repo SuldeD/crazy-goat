@@ -23,7 +23,7 @@ import { AiFillHeart, AiFillStar } from "react-icons/ai";
 import { Field, Form, Formik } from "formik";
 import MInput from "../../../../components/Input";
 import MButton from "../../../../components/Button";
-import { getTournamentContract } from "contracts/TournamentContractHelper";
+import { getTournamentContract } from "helper_contracts/TournamentContractHelper";
 import { parse18 } from "contracts/helpers";
 import { buyLifeAPI } from "services/getService";
 import * as Yup from "yup";

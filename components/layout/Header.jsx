@@ -17,7 +17,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { verifyMessage } from "../../services/checkSIWE";
-import { getHostNftContract } from "../../contracts/HostNFTContractHelper";
+import { getHostNftContract } from "../../helper_contracts/HostNFTContractHelper";
 import { ConnectKitButton } from "connectkit";
 import MButton from "components/Button";
 
