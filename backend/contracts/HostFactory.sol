@@ -37,9 +37,12 @@ contract HostFactory is AccessControl {
     string memory _email,
     string memory _phone_number
   ) external payable {
-    require(hostHasNft[msg.sender] == false, "This address has already hostNFT.");
-    (bool success, ) = creator.call{ value: hostNFTPrice }("");
-		require(success);
+    require(!hostHasNft[msg.sender], "This address has already hostNFT.");
+    require(msg.value >= hostNFTPrice, "Insufficient funds to create hostNFT."); // Add this to check if there are sufficient funds sent.
+
+    bool success = payable(creator).send(hostNFTPrice); // Send the NFT price to the creator.
+    require(success, "Failed to send funds to creator."); // Check if the fund transfer is successful.
+
     uint id = nft.hostMint(
       msg.sender,
       _username,
@@ -54,6 +57,7 @@ contract HostFactory is AccessControl {
     hostLength++;
     emit hostNFTMinted(msg.sender, id, msg.value);
   }
+
 
   function setThePriceOfNFT(uint256 _hostNFTPrice) external {
     require(creator == msg.sender, "Only the creator set the price of HOST");
