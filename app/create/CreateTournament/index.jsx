@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 "use client";
 import { getTournamentFactoryContract } from "../../../helper_contracts/TournamentFactoryContractHelper";
 import { parse18 } from "../../../helper_contracts/helpers";

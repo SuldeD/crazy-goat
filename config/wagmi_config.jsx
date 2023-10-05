@@ -1,8 +1,8 @@
 import { createConfig } from "wagmi";
 import { getDefaultConfig } from "connectkit";
-import { polygon } from "wagmi/chains";
+import { polygonMumbai } from "wagmi/chains";
 
-const chains = [polygon];
+const chains = [polygonMumbai];
 
 const config = createConfig(
   getDefaultConfig({
