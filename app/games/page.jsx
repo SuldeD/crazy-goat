@@ -2,12 +2,16 @@
 
 import MText from "../../components/Text";
 import { MCard } from "../../components/main/Tournaments/index";
-import { getTournaments } from "../../services/getService";
+import { getTournaments, getToys } from "../../services/getService";
 import { Flex, Stack, WrapItem } from "@chakra-ui/react";
 import ToysCard from "./ToysCard";
 
 export const Games = async () => {
   const data = await getTournaments();
+  const toys = await getToys();
+
+  if (!data?.data?.tournoments?.length) return null;
+  if (!toys?.data?.toys?.length) return null;
 
   return (
     <Stack w="full">
@@ -15,7 +19,7 @@ export const Games = async () => {
         <MText title={true} text={"Free Games"} />
       </Stack>
       <Flex justify="space-between" w="full" wrap="wrap" mt="8" gap="8">
-        <ToysCard />
+        <ToysCard toys={toys} />
       </Flex>
       <Stack align="center" mt="20">
         <MText title={true} text={"Tournaments"} />

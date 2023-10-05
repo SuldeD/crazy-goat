@@ -11,11 +11,7 @@ import {
 } from "@chakra-ui/react";
 import MButton from "../../../components/Button";
 
-export default async function ToysCard() {
-  const toys = await getToys();
-
-  console.log(toys);
-
+export default async function ToysCard({ toys }) {
   return (
     <Flex justify="space-between" w="full" wrap="wrap" gap="8">
       {toys?.data?.toys?.map((gm, id) => (

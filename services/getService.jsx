@@ -1,5 +1,5 @@
 import axios from "axios";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import Cookies from "universal-cookie";
 
 const GAME_DOMAIN = "https://api-game.mongolnft.com/";
@@ -43,18 +43,20 @@ const createTournamentAPI = async (data) => {
 };
 
 const getToyInfo = async ({ id, jwtToken }) => {
-  const res = await fetch(
-    `https://api-game.mongolnft.com/api/tournoments-user-web3/`,
-    {
-      method: "POST",
-      cache: "no-store",
-      headers: {
-        Authorization: `JWT ${jwtToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ tournoment_id: id }),
-    }
-  );
+  const res = await fetch(`${GAME_DOMAIN}api/tournoments-user-web3/`, {
+    next: { tags: ["toy"] },
+    method: "POST",
+    cache: "no-store",
+    headers: {
+      Authorization: `JWT ${jwtToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ tournoment_id: id }),
+  });
+
+  if (!res.ok) {
+    return new Error("Failed to fetch data");
+  }
 
   return res.json();
 };
@@ -63,26 +65,20 @@ async function getTournament(id) {
   const res = await fetch(
     `https://api-game.mongolnft.com/api/tournoments-web3/?tour_id=${id}`,
     {
-      method: "GET",
       next: { tags: ["tournament"] },
-      cache: "no-store",
-      headers: {
-        // Authorization: `JWT ${jwtToken}`,
-        "Content-Type": "application/json",
-      },
+      cache: "no-cache",
     }
   );
+  if (!res.ok) {
+    return new Error("Failed to fetch data");
+  }
   return res.json();
 }
 
 const getToys = async (id) => {
   const res = await fetch(`https://api-game.mongolnft.com/api/toys/`, {
     method: "GET",
-    cache: "no-store",
-    headers: {
-      // Authorization: `JWT ${jwtToken}`,
-      "Content-Type": "application/json",
-    },
+    cache: "no-cache",
   });
 
   return res.json();

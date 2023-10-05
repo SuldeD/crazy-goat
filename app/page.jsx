@@ -14,10 +14,10 @@ export default async function Home() {
   if (!products?.data?.tournoments?.length) return null;
 
   return (
-    <>
+    <main className="w-full">
       <MainTitle />
       <About />
       <Tournaments products={products} />
-    </>
+    </main>
   );
 }
