@@ -4,9 +4,9 @@ import MText from "../../components/Text";
 import { MCard } from "../../components/main/Tournaments/index";
 import { getTournaments, getToys } from "../../services/getService";
 import { Flex, Stack, WrapItem } from "@chakra-ui/react";
-import ToysCard from "./ToysCard";
+import ToysCard from "../../components/ToysCard";
 
-export const Games = async () => {
+export default async function Games() {
   const data = await getTournaments();
   const toys = await getToys();
 
@@ -36,6 +36,4 @@ export const Games = async () => {
       </Flex>
     </Stack>
   );
-};
-
-export default Games;
+}

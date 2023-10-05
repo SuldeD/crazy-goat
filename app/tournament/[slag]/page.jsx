@@ -5,7 +5,7 @@ import { getTournament, getToyInfo } from "../../../services/getService";
 import { useState } from "react";
 import Cookies from "universal-cookie";
 
-export const Tournament = async ({ params }) => {
+export default async function Tournament({ params }) {
   const cookies = new Cookies();
   const jwtToken = cookies.get("jwtToken");
   const [tournoment, setTournoment] = useState("");
@@ -31,6 +31,4 @@ export const Tournament = async ({ params }) => {
       />
     </div>
   );
-};
-
-export default Tournament;
+}

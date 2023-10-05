@@ -7,7 +7,7 @@ import { Stack } from "@chakra-ui/react";
 import { useState } from "react";
 import { useEffect } from "react";
 
-export const Ranking = async () => {
+export default async function Ranking() {
   const [pointsData, setPoints] = useState(null);
   const [myAddress, setMyAddress] = useState(null);
 
@@ -28,6 +28,4 @@ export const Ranking = async () => {
       />
     </div>
   );
-};
-
-export default Ranking;
+}

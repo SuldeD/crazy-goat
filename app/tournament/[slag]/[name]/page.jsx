@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import StickNinja from "../../../games/stick_hero/Ninja";
-import { Game } from "../../../games/flappy_wolf/Game";
+import StickNinja from "../../../../components/stick_hero/Ninja";
+import { Game } from "../../../../components/flappy_wolf/Game";
 import Cookies from "universal-cookie";
 import { getTournament, getToyInfo } from "services/getService";
 import {
@@ -29,7 +29,7 @@ import { buyLifeAPI } from "services/getService";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 
-export const Tournament = async ({ params }) => {
+export default async function Tournament({ params }) {
   const cookies = new Cookies();
   const jwtToken = cookies.get("jwtToken");
   const toast = useToast();
@@ -234,6 +234,4 @@ export const Tournament = async ({ params }) => {
       )}
     </div>
   );
-};
-
-export default Tournament;
+}

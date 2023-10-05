@@ -1,10 +1,56 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { HStack, Stack, Text, Wrap } from "@chakra-ui/react";
+import { makeHash } from "../../services/helpers";
+import Cookies from "universal-cookie";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  HStack,
+  Stack,
+  Text,
+  useDisclosure,
+  useToast,
+  Wrap,
+} from "@chakra-ui/react";
+import { AiFillHeart, AiFillStar } from "react-icons/ai";
 import { IoGameController } from "react-icons/io5";
+import { Field, Form, Formik } from "formik";
+import MInput from "../../components/Input";
+import MButton from "../../components/Button";
+import { getTournamentContract } from "../../helper_contracts/TournamentContractHelper";
+import { parse18 } from "../../helper_contracts/helpers";
+import { buyLifeAPI } from "../../services/getService";
+import * as Yup from "yup";
 
-export default function NinjaGame() {
+export default function NinjaGame({
+  tour_id,
+  total,
+  life,
+  data,
+  updateTournomentDetailData,
+}) {
+  const cookies = new Cookies();
+  const jwtToken = cookies.get("jwtToken");
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const router = useRouter();
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  let player = "";
+  let back_str = "";
+  let user_id = "";
+  let check_str = "";
+  let mid_check_str_history = [];
+  let mid_check_str = "";
+  let intervalId;
+
   const rootRef = useRef(null);
   const canvasRef = useRef(null);
   const introRef = useRef(null);
@@ -51,6 +97,10 @@ export default function NinjaGame() {
 
   const heroWidth = 17; // 24
   const heroHeight = 30; // 40
+
+  useEffect(() => {
+    player = window.ethereum.selectedAddress;
+  }, [player]);
 
   useEffect(() => {
     let canvas = canvasRef.current;
@@ -148,11 +198,81 @@ export default function NinjaGame() {
     draw();
   }
 
+  function game_mid() {
+    let data = JSON.stringify({
+      tour_id: tour_id,
+      toy_id: 3,
+      point: score,
+      check_str: check_str,
+      back_str: "",
+    });
+    let config2 = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "https://api-game.mongolnft.com/api/gamemid-web3/",
+      headers: {
+        Authorization: `JWT ${jwtToken}`,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+    axios
+      .request(config2)
+      .then((response) => {
+        mid_check_str = response.data.data.mid_check_str;
+        mid_check_str_history.push(mid_check_str);
+        console.log(mid_check_str_history.length);
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  function startInterval() {
+    intervalId = setInterval(game_mid, 10000); // call game_mid() every 10 seconds
+  }
+
+  function stopInterval() {
+    clearInterval(intervalId);
+  }
+
   // The main game loop
   async function animate(timestamp) {
     if (!lastTimestamp) {
       lastTimestamp = timestamp;
       window?.requestAnimationFrame(animate);
+      if (!check_str) {
+        startInterval();
+        let data = "";
+        let config = {
+          method: "get",
+          maxBodyLength: Infinity,
+          url: `https://api-game.mongolnft.com/api/gamestart-web3/?tour_id=${tour_id}&toy_id=3`,
+          headers: {
+            Authorization: `JWT ${jwtToken}`,
+          },
+          data: data,
+        };
+        try {
+          axios.request(config).then((response) => {
+            let current_player =
+              response?.data?.data.game_start?.user?.username.toLowerCase();
+
+            if (current_player == player) {
+              check_str = response?.data?.data?.game_start?.check_str;
+              user_id = response?.data?.data?.game_start?.user?.id;
+              console.log(JSON.stringify(response.data));
+            } else {
+              setIsDisabled(true);
+              console.log(isDisabled);
+            }
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+      }
       return;
     }
     switch (phase) {
@@ -240,6 +360,45 @@ export default function NinjaGame() {
         heroY += (timestamp - lastTimestamp) / fallingSpeed;
 
         if (heroY > maxHeroY) {
+          stopInterval();
+          try {
+            const makeHashParams = [
+              user_id.toString(),
+              score.toString(),
+              check_str,
+              ...mid_check_str_history.map((item) => item.toString()),
+            ];
+            back_str = await makeHash(makeHashParams, score);
+            console.log("back_str: ", back_str);
+
+            let data = JSON.stringify({
+              tour_id: tour_id,
+              toy_id: 3,
+              point: score,
+              check_str: check_str,
+              back_str: back_str,
+            });
+
+            let config = {
+              method: "post",
+              maxBodyLength: Infinity,
+              url: "https://api-game.mongolnft.com/api/gameend-web3/",
+              headers: {
+                Authorization: `JWT ${jwtToken}`,
+                "Content-Type": "application/json",
+              },
+              data: data,
+            };
+
+            axios.request(config).then((response) => {
+              console.log(JSON.stringify(response.data));
+
+              JSON.stringify(response.data.return_code) == "2002" &&
+                updateTournomentDetailData();
+            });
+          } catch (error) {
+            console.log(error);
+          }
           restartRef.current.style.display = "block";
           return;
         }
@@ -568,12 +727,174 @@ export default function NinjaGame() {
     event.preventDefault();
     resetGame();
     restartRef.current.style.display = "none";
+
+    updateTournomentDetailData();
   };
+
+  const handleBuyLife = async (values) => {
+    try {
+      const { count } = values;
+      let { tournamentWriteContract } = await getTournamentContract(
+        data.address
+      );
+      let price = parse18(parseFloat(count / 100));
+      const tx = await tournamentWriteContract.deposit({
+        value: price,
+      });
+      await tx.wait();
+
+      let info = JSON.stringify({
+        transaction_hash: tx.hash,
+        chain: "polygon",
+        tournoment_id: data.id,
+      });
+      const res = await buyLifeAPI(info);
+      onClose();
+      toast({
+        title: "Success",
+        description: `Success`,
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+      updateTournomentDetailData();
+      return res;
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Not buy life.",
+        description: `${err.reason}`,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return null;
+    }
+  };
+
+  const lifeSchema = Yup.object().shape({
+    count: Yup.string().required("Required"),
+  });
+
+  useEffect(() => {
+    life == 0 && onOpen();
+  }, [life, onOpen]);
+
+  useEffect(() => {
+    isDisabled && onOpen();
+  }, [isDisabled, onOpen]);
 
   return (
     <div className="w-full">
+      <AlertDialog motionPreset="slideInBottom" isOpen={isOpen} isCentered>
+        <AlertDialogOverlay />
+        <AlertDialogContent bg="black" rounded="20px" p="5">
+          <AlertDialogHeader textColor="white">Buy life</AlertDialogHeader>
+          <AlertDialogBody>
+            <Text mb="3" fontFamily="primary" fontSize="16px" color="white">
+              description
+            </Text>
+            <Formik
+              validationSchema={lifeSchema}
+              initialValues={{ count: "" }}
+              onSubmit={async (values) => {
+                await handleBuyLife(values);
+                actions.setSubmitting(false);
+              }}
+            >
+              {(props) => (
+                <Form>
+                  <Stack w="full" gap="2">
+                    <Field name="count">
+                      {({ field, form }) => (
+                        <>
+                          <MInput
+                            id="life"
+                            mt="1"
+                            min={1}
+                            {...field}
+                            placeholder="Life count"
+                            type="number"
+                          />
+                          <Text color="rgba(255,145,0,.831)" mt="1">
+                            {form.touched.count && form.errors.count}
+                          </Text>
+                        </>
+                      )}
+                    </Field>
+
+                    <MButton
+                      w="full"
+                      type="submit"
+                      text="Buy Life"
+                      isLoading={props.isSubmitting}
+                    />
+                  </Stack>
+                </Form>
+              )}
+            </Formik>
+
+            <MButton
+              mt="4"
+              w="full"
+              text="Exit"
+              onClick={() => router.back()}
+            />
+          </AlertDialogBody>
+        </AlertDialogContent>
+      </AlertDialog>
       <div className="h-screen pb-10 text-white font-body">
         <Wrap justify="space-between" wrap={true}>
+          <Stack
+            borderRadius="20px"
+            bg="whiteAlpha.100"
+            px="5"
+            justify="center"
+            minH="100px"
+            w={["100%", "32%", "30%"]}
+          >
+            <HStack mb="1">
+              <Text fontFamily="primary" fontSize="20px" textColor="white">
+                Total Score
+              </Text>
+              <Text fontFamily="primary" fontSize="18px" textColor="white">
+                <AiFillStar />
+              </Text>
+            </HStack>
+            <Text
+              fontFamily="primary"
+              fontSize="32px"
+              fontWeight="500"
+              textColor="yellow.primary"
+            >
+              {total}
+            </Text>
+          </Stack>
+          <Stack
+            borderRadius="20px"
+            bg="whiteAlpha.100"
+            px="5"
+            justify="center"
+            minH="100px"
+            w={["100%", "32%", "30%"]}
+          >
+            <HStack mb="1">
+              <Text fontFamily="primary" fontSize="20px" textColor="white">
+                Life
+              </Text>
+              <Text fontFamily="primary" fontSize="18px" textColor="white">
+                <AiFillHeart />
+              </Text>
+            </HStack>
+            <Text
+              fontFamily="primary"
+              fontSize="32px"
+              fontWeight="500"
+              textColor="yellow.primary"
+            >
+              {life}
+            </Text>
+          </Stack>
           <Stack
             borderRadius="20px"
             bg="whiteAlpha.100"
@@ -607,7 +928,8 @@ export default function NinjaGame() {
           <canvas ref={canvasRef} width="300" height="300" />
           <div
             ref={introRef}
-            className={`w-[200px] h-[150px] absolute font-semibold text-lg text-center text-black`}
+            disabled={isDisabled}
+            className={`w-[200px] h-[150px] absolute font-semibold text-lg text-center text-black select-none`}
           >
             Hold down the mouse to stretch out a stick
           </div>
@@ -616,6 +938,7 @@ export default function NinjaGame() {
           </div>
           <button
             onClick={restartGame}
+            // disabled={isDisabled}
             ref={restartRef}
             className={`absolute border-none w-[120px] h-[120px] hidden rounded-full text-white bg-[#02E111] font-semibold text-xl cursor-pointer`}
           >

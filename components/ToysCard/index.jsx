@@ -1,4 +1,4 @@
-import { getToys } from "../../../services/getService";
+// import { getToys } from "../../../services/getService";
 import {
   Card,
   CardBody,
@@ -9,7 +9,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import MButton from "../../../components/Button";
+import MButton from "../Button";
 
 export default async function ToysCard({ toys }) {
   return (

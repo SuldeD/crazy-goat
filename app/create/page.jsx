@@ -1,13 +1,11 @@
-"use client";
+import CreateTournament from "../../components/CreateTournament";
 
-import CreateTournament from "./CreateTournament";
-
-export const Create = () => {
+function Create() {
   return (
-    <>
+    <div className="w-full justify-center mx-auto">
       <CreateTournament />
-    </>
+    </div>
   );
-};
+}
 
 export default Create;

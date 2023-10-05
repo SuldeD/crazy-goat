@@ -1,11 +1,12 @@
 /* eslint-disable no-unused-vars */
 "use client";
-import { getTournamentFactoryContract } from "../../../helper_contracts/TournamentFactoryContractHelper";
-import { parse18 } from "../../../helper_contracts/helpers";
-import MButton from "../../../components/Button";
-import MInput from "../../../components/Input";
-import MText from "../../../components/Text";
-import { createTournamentAPI } from "../../../services/getService";
+
+import { getTournamentFactoryContract } from "../../helper_contracts/TournamentFactoryContractHelper";
+import { parse18 } from "../../helper_contracts/helpers";
+import MButton from "../Button";
+import MInput from "../Input";
+import MText from "../Text";
+import { createTournamentAPI } from "../../services/getService";
 import { Stack, Text } from "@chakra-ui/layout";
 import { Field, Form, Formik } from "formik";
 import moment from "moment";
@@ -18,6 +19,7 @@ export default function CreateTournament() {
   const createTournament = async (values) => {
     try {
       const { name, admin, endTime, desc, image, select } = values;
+      console.log(select, "select");
       const { tournamentFactoryWriteContract, tournamentFactoryReadContract } =
         await getTournamentFactoryContract();
       let tournamentDetails = [name, image];
@@ -108,7 +110,7 @@ export default function CreateTournament() {
       }}
     >
       {(props) => (
-        <Form className="w-full max-w-2xl">
+        <Form className="w-full max-w-2xl mx-auto">
           <Stack align="center" my="10">
             <MText title={true} text={"Create Tournament"} />
           </Stack>
