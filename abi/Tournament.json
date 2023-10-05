@@ -32,6 +32,11 @@
         "internalType": "struct TournamentDetails",
         "name": "_tournamentDetails",
         "type": "tuple"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_nftAddrs",
+        "type": "address[]"
       }
     ],
     "stateMutability": "nonpayable",
@@ -41,21 +46,21 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "",
+        "name": "depositor",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "",
+        "name": "contractAddress",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "",
+        "name": "amount",
         "type": "uint256"
       }
     ],
@@ -66,19 +71,19 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "",
+        "name": "winner",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "",
+        "name": "prizePool",
         "type": "uint256"
       }
     ],
-    "name": "TournamendEnded",
+    "name": "TournamentEnded",
     "type": "event"
   },
   {
@@ -124,6 +129,38 @@
   {
     "inputs": [],
     "name": "host",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nft",
+    "outputs": [
+      {
+        "internalType": "contract IBase721",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "nftAddrs",
     "outputs": [
       {
         "internalType": "address",

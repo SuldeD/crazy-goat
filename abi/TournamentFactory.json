@@ -86,6 +86,11 @@
         "internalType": "struct TournamentDetails",
         "name": "_tournamentDetails",
         "type": "tuple"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_nftAddr",
+        "type": "address[]"
       }
     ],
     "name": "createTournament",
@@ -188,7 +193,7 @@
     "name": "hostNft",
     "outputs": [
       {
-        "internalType": "contract IHostNFT",
+        "internalType": "contract IBase721",
         "name": "",
         "type": "address"
       }

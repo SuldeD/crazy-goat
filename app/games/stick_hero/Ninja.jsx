@@ -23,8 +23,8 @@ import { IoGameController } from "react-icons/io5";
 import { Field, Form, Formik } from "formik";
 import MInput from "../../../components/Input";
 import MButton from "../../../components/Button";
-import { getTournamentContract } from "../../../contracts/TournamentContractHelper";
-import { parse18 } from "../../../contracts/helpers";
+import { getTournamentContract } from "../../../helper_contracts/TournamentContractHelper";
+import { parse18 } from "../../../helper_contracts/helpers";
 import { buyLifeAPI } from "../../../services/getService";
 import * as Yup from "yup";
 
