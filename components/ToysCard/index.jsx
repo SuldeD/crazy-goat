@@ -48,7 +48,7 @@ export default async function ToysCard({ toys }) {
               </Text>
               <HStack display={["none", null, "flex"]} mb="4">
                 <Text color="white">
-                  {gm?.toy?.id == 1
+                  {gm?.id == 1
                     ? "The objective of Flappy Wolf is simple yet challenging: navigate the wolf through a series of obstacles by tapping the screen to make the wolf flap its wings and gain altitude."
                     : "Get ready for a thrilling and precision-filled adventure in Stick Ninja: Platform Drop Challenge! As a stick ninja master, your objective is to strategically drop platforms for your nimble ninja to traverse from one island to the next."}
                 </Text>

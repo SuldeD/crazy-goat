@@ -19,7 +19,7 @@ import {
 
 export const MTable = async ({ setPoints, pointsData, myAddress }) => {
   const tournoments = await getTournaments();
-  const initialPoints = await getTotalPoints({ id: "37" });
+  const initialPoints = await getTotalPoints({ id: "15" });
 
   const handleChange = async (index) => {
     const id = tournoments?.data?.tournoments[index]?.id;

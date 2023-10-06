@@ -163,26 +163,3 @@ export default function Tournaments({ products }) {
     </Stack>
   );
 }
-
-// export async function getStaticProps() {
-//   const res = await fetch(
-//     `https://api-game.mongolnft.com/api/tournoments-web3/?type=active`,
-//     {
-//       next: { tags: ["tournaments"] },
-//       cache: "no-store",
-//     }
-//   );
-
-//   if (!res.ok) {
-//     return new Error("Failed to fetch data");
-//   }
-
-//   if (!products?.data?.tournoments?.length) return null;
-
-//   const products = res.json();
-
-//   console.log(products, "tournaments");
-//   return {
-//     products,
-//   };
-// }
