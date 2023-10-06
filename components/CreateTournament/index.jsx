@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 "use client";
 
 import { getTournamentFactoryContract } from "../../helper_contracts/TournamentFactoryContractHelper";
@@ -10,16 +9,18 @@ import { createTournamentAPI } from "../../services/getService";
 import { Stack, Text } from "@chakra-ui/layout";
 import { Field, Form, Formik } from "formik";
 import moment from "moment";
-import { Select, useToast } from "@chakra-ui/react";
+import { Image, Select, useToast } from "@chakra-ui/react";
 import * as Yup from "yup";
+import { useState } from "react";
 
 export default function CreateTournament() {
   const toast = useToast();
+  const [selectData, setSelectData] = useState();
 
   const createTournament = async (values) => {
     try {
-      const { name, admin, endTime, desc, image, select } = values;
-      console.log(select, "select");
+      const { name, admin, endTime, desc, image } = values;
+      console.log(selectData, "select");
       const { tournamentFactoryWriteContract, tournamentFactoryReadContract } =
         await getTournamentFactoryContract();
       let tournamentDetails = [name, image];
@@ -96,14 +97,19 @@ export default function CreateTournament() {
     endTime: Yup.string().required("Time is required"),
     desc: Yup.string().required("Description is required"),
     image: Yup.string().required("Image url is required"),
-    select: Yup.string().required("Select is required"),
   });
 
   return (
     <Formik
       className="w-full"
       validationSchema={createSchema}
-      initialValues={{ name: "", admin: "", endTime: "", desc: "", image: "" }}
+      initialValues={{
+        name: "",
+        admin: "",
+        endTime: "",
+        desc: "",
+        image: "",
+      }}
       onSubmit={async (values, actions) => {
         await createTournament(values);
         actions.setSubmitting(false);
@@ -172,27 +178,57 @@ export default function CreateTournament() {
                 </>
               )}
             </Field>
-            <Field name="select">
-              {({ field, form }) => (
-                <>
-                  <Select
-                    {...field}
-                    placeholder="Select option"
-                    textColor="white"
-                    rounded="35px"
-                    border="1px"
-                    iconColor="white"
-                  >
-                    <option value="option1">Option 1</option>
-                    <option value="option2">Option 2</option>
-                    <option value="option3">Option 3</option>
-                  </Select>
-                  <Text color="rgba(255,145,0,.831)">
-                    {form.touched.select && form.errors.select}
-                  </Text>
-                </>
-              )}
-            </Field>
+            <Select
+              placeholder="Select"
+              textColor="white"
+              rounded="35px"
+              border="1px"
+              iconColor="white"
+              onChange={(e) => {
+                setSelectData(e.target.value);
+                return e;
+              }}
+            >
+              <option value="pub">Public</option>
+              <option value="wolf">The Wolves</option>
+              <option value="maral">The Marals</option>
+            </Select>
+            {!selectData && (
+              <Text color="rgba(255,145,0,.831)">Select is required</Text>
+            )}
+            {selectData && selectData !== "pub" && (
+              <Image
+                onClick={() => {
+                  selectData == "wolf"
+                    ? window.open(
+                        "https://opensea.io/collection/thewolvesmint",
+                        "_blank"
+                      )
+                    : selectData == "maral"
+                    ? window.open(
+                        "https://opensea.io/collection/the-marals",
+                        "_blank"
+                      )
+                    : null;
+                }}
+                cursor="pointer"
+                rounded="35px"
+                border="1px"
+                iconColor="white"
+                opacity="0.8"
+                w="full"
+                height="200px"
+                objectFit="cover"
+                alt={`${selectData} image`}
+                src={
+                  selectData == "wolf"
+                    ? "games/wolves.avif"
+                    : selectData == "maral"
+                    ? "games/marals.avif"
+                    : ""
+                }
+              />
+            )}
           </Stack>
           <MButton
             w="full"

@@ -7,7 +7,7 @@ import { Stack } from "@chakra-ui/react";
 import { useState } from "react";
 import { useEffect } from "react";
 
-export default async function Ranking() {
+export default function Ranking() {
   const [pointsData, setPoints] = useState(null);
   const [myAddress, setMyAddress] = useState(null);
 
