@@ -9,6 +9,13 @@ import {
   WrapItem,
   Text as CText,
   Flex,
+  TabList,
+  TabIndicator,
+  TabPanels,
+  TabPanel,
+  Tabs,
+  Tab,
+  HStack,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -16,6 +23,7 @@ import { verifyMessage } from "services/checkSIWE";
 import MButton from "../../Button";
 import HeadingText from "../../HeadingText";
 import Text from "../../Text";
+import { FiInbox } from "react-icons/fi";
 
 export function MCard({ id, Tg }) {
   const router = useRouter();
@@ -141,25 +149,138 @@ export function MCard({ id, Tg }) {
 }
 
 export default function Tournaments({ products }) {
+  const [tab, setTab] = useState();
   return (
     <Stack mt="32">
       <HeadingText text="Tournaments" />
-      <Wrap
-        spacing="30px"
-        mt="50"
-        w="full"
-        align="center"
-        justify="center"
-        minH="50vh"
+      <Tabs
+        position="relative"
+        variant="unstyled"
+        onChange={(index) => setTab(index)}
       >
-        {products?.data?.tournoments?.map((Tg, id) => {
-          return (
-            <WrapItem w="full" key={id}>
-              <MCard id={id} Tg={Tg} />
-            </WrapItem>
-          );
-        })}
-      </Wrap>
+        <TabList
+          gap="12"
+          mt="4"
+          variant="unstyled"
+          colorScheme="green"
+          justifyContent={["center", "start", "start"]}
+          w="full"
+        >
+          <Tab
+            className="bg-white text-black rounded-[32px]"
+            position="relative"
+            _selected={{ bg: "#02E111" }}
+          >
+            <CText fontFamily="primary" fontWeight="700" fontSize="24px" p="2">
+              Active
+            </CText>
+            <Stack position="absolute" right="-12" top="-2" p="2" px="3">
+              <CText
+                bg={(tab == 0) | (tab == null) ? "green.primary" : "white"}
+                px="2"
+                rounded="32px"
+                fontFamily="primary"
+                fontWeight="600"
+                fontSize="18px"
+              >
+                01
+              </CText>
+            </Stack>
+          </Tab>
+          <Tab
+            className="bg-white text-black rounded-[32px]"
+            position="relative"
+            _selected={{ bg: "#02E111" }}
+          >
+            <CText fontFamily="primary" fontWeight="700" fontSize="24px" p="2">
+              History
+            </CText>
+            <Stack position="absolute" right="-12" top="-2" p="2" px="3">
+              <CText
+                bg={tab == 1 ? "green.primary" : "white"}
+                px="2"
+                rounded="32px"
+                fontFamily="primary"
+                fontWeight="600"
+                fontSize="18px"
+              >
+                02
+              </CText>
+            </Stack>
+          </Tab>
+        </TabList>
+        <TabIndicator />
+        <TabPanels>
+          <TabPanel>
+            <Wrap
+              spacing="30px"
+              mt="50"
+              w="full"
+              align="center"
+              justify="center"
+              minH="20vh"
+            >
+              {products?.data?.tournoments.length > 0 &&
+              products?.data?.tournoments?.some(
+                (tg) => tg.status == "active"
+              ) ? (
+                products?.data?.tournoments?.map((Tg, id) => {
+                  return (
+                    <WrapItem w="full" key={id}>
+                      <MCard id={id} Tg={Tg} />
+                    </WrapItem>
+                  );
+                })
+              ) : (
+                <Flex justify="center">
+                  <Stack w="full">
+                    <HStack justify="center">
+                      <FiInbox className="text-white" size="50px" />
+                    </HStack>
+                    <CText textColor="white" textAlign="center">
+                      No tournament
+                    </CText>
+                  </Stack>
+                </Flex>
+              )}
+            </Wrap>
+          </TabPanel>
+          <TabPanel>
+            <Wrap
+              spacing="30px"
+              mt="50"
+              w="full"
+              align="center"
+              justify="center"
+              minH="20vh"
+            >
+              {products?.data?.tournoments.length > 0 &&
+              products?.data?.tournoments?.some(
+                (tg) => tg.status == "history"
+              ) ? (
+                products?.data?.tournoments?.map((Tg, id) => {
+                  return (
+                    <WrapItem w="full" key={id}>
+                      <MCard id={id} Tg={Tg} />
+                    </WrapItem>
+                  );
+                })
+              ) : (
+                <Flex justify="center">
+                  <Stack w="full">
+                    <HStack justify="center">
+                      <FiInbox className="text-white" size="50px" />
+                    </HStack>
+                    <CText textColor="white" textAlign="center">
+                      No tournament
+                    </CText>
+                  </Stack>
+                </Flex>
+              )}
+            </Wrap>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </Stack>
   );
 }

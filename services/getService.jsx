@@ -8,7 +8,20 @@ const cookies = new Cookies();
 const jwtToken = cookies.get("jwtToken");
 
 export async function getTournaments() {
-  const res = await fetch(`${GAME_DOMAIN}api/tournoments-web3/?type=active`, {
+  const res = await fetch(`${GAME_DOMAIN}api/tournoments-web3/?type=all`, {
+    next: { tags: ["tournaments"] },
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    return new Error("Failed to fetch data");
+  }
+
+  return res.json();
+}
+
+export async function getTournamentsHistory() {
+  const res = await fetch(`${GAME_DOMAIN}api/tournoments-web3/?type=all`, {
     next: { tags: ["tournaments"] },
     cache: "no-store",
   });
@@ -75,7 +88,7 @@ async function getTournament(id) {
   return res.json();
 }
 
-const getToys = async (id) => {
+const getToys = async () => {
   const res = await fetch(`https://api-game.mongolnft.com/api/toys/`, {
     method: "GET",
     cache: "no-cache",

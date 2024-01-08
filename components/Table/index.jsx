@@ -19,7 +19,7 @@ import {
 
 export const MTable = async ({ setPoints, pointsData, myAddress }) => {
   const tournoments = await getTournaments();
-  const initialPoints = await getTotalPoints({ id: "15" });
+  const initialPoints = await getTotalPoints({ id: "32" });
 
   const handleChange = async (index) => {
     const id = tournoments?.data?.tournoments[index]?.id;
@@ -137,7 +137,7 @@ export const MTable = async ({ setPoints, pointsData, myAddress }) => {
                         </Tr>
                       </Thead>
                       <Tbody rounded="20px">
-                        {points?.map((dt, id) => {
+                        {points.slice(0, 10)?.map((dt, id) => {
                           return (
                             <Tr key={id}>
                               <Td position="relative" w="250px">

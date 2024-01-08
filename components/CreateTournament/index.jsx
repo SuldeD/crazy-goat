@@ -19,8 +19,8 @@ export default function CreateTournament() {
 
   const createTournament = async (values) => {
     try {
-      const { name, admin, endTime, desc, image } = values;
-      console.log(selectData, "select");
+      const { name, endTime, desc, image } = values;
+
       const { tournamentFactoryWriteContract, tournamentFactoryReadContract } =
         await getTournamentFactoryContract();
       let tournamentDetails = [name, image];
@@ -29,12 +29,20 @@ export default function CreateTournament() {
       const percent = 90;
       const wei = parse18(percent);
       const tx = await tournamentFactoryWriteContract.createTournament(
-        admin,
+        window?.ethereum?.selectedAddress,
         endtime,
         wei,
         tournamentDetails
       );
       await tx.wait();
+      !tx &&
+        toast({
+          title: "Tournament not created.",
+          description: `${err.reason}`,
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
       let tournamentLength =
         await tournamentFactoryReadContract.getTournamentLength();
       let tournamentAddress =
@@ -82,17 +90,9 @@ export default function CreateTournament() {
       });
       return null;
     }
-    // finally {
-    //   // setIsLoading(false);
-    //   navigate("/");
-    // }
   };
 
   const createSchema = Yup.object().shape({
-    admin: Yup.string()
-      .min(40, "Address is too short!")
-      .max(50, "Address is too long!")
-      .required("Admin address is required"),
     name: Yup.string().min(2, "Too Short!").required("Name is required"),
     endTime: Yup.string().required("Time is required"),
     desc: Yup.string().required("Description is required"),
@@ -121,7 +121,7 @@ export default function CreateTournament() {
             <MText title={true} text={"Create Tournament"} />
           </Stack>
           <Stack spacing="4">
-            <Field name="admin">
+            {/* <Field name="admin">
               {({ field, form }) => {
                 return (
                   <>
@@ -132,7 +132,7 @@ export default function CreateTournament() {
                   </>
                 );
               }}
-            </Field>
+            </Field> */}
             <Field name="name">
               {({ field, form }) => (
                 <>
