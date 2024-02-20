@@ -12,9 +12,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "_winnerRewardPercentage",
-        "type": "uint256"
+        "internalType": "uint256[]",
+        "name": "_rewardPercentages",
+        "type": "uint256[]"
       },
       {
         "components": [
@@ -32,11 +32,6 @@
         "internalType": "struct TournamentDetails",
         "name": "_tournamentDetails",
         "type": "tuple"
-      },
-      {
-        "internalType": "address[]",
-        "name": "_nftAddrs",
-        "type": "address[]"
       }
     ],
     "stateMutability": "nonpayable",
@@ -72,9 +67,9 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "address",
-        "name": "winner",
-        "type": "address"
+        "internalType": "address[]",
+        "name": "winners",
+        "type": "address[]"
       },
       {
         "indexed": false,
@@ -140,19 +135,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "nft",
-    "outputs": [
-      {
-        "internalType": "contract IBase721",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -160,12 +142,12 @@
         "type": "uint256"
       }
     ],
-    "name": "nftAddrs",
+    "name": "rewardPercentages",
     "outputs": [
       {
-        "internalType": "address",
+        "internalType": "uint256",
         "name": "",
-        "type": "address"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -187,9 +169,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_percent",
-        "type": "uint256"
+        "internalType": "uint256[]",
+        "name": "_rewardPercentages",
+        "type": "uint256[]"
       }
     ],
     "name": "setPercentage",
@@ -200,9 +182,9 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_winner",
-        "type": "address"
+        "internalType": "address[]",
+        "name": "_winners",
+        "type": "address[]"
       }
     ],
     "name": "setWinner",
@@ -229,39 +211,19 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "winner",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "winners",
     "outputs": [
       {
         "internalType": "address",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "winnerCalled",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "winnerRewardPercentage",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",

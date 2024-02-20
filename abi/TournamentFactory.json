@@ -66,9 +66,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "_percentageOfWinner",
-        "type": "uint256"
+        "internalType": "uint256[]",
+        "name": "_rewardPercentages",
+        "type": "uint256[]"
       },
       {
         "components": [
@@ -86,11 +86,6 @@
         "internalType": "struct TournamentDetails",
         "name": "_tournamentDetails",
         "type": "tuple"
-      },
-      {
-        "internalType": "address[]",
-        "name": "_nftAddr",
-        "type": "address[]"
       }
     ],
     "name": "createTournament",
