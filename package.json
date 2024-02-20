@@ -29,6 +29,7 @@
     "formik": "^2.4.5",
     "framer-motion": "^10.16.4",
     "lokijs": "^1.5.12",
+    "lottie-react": "^2.4.0",
     "moment": "^2.29.4",
     "next": "13.5.2",
     "phaser": "^3.60.0",

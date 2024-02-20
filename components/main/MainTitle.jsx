@@ -1,9 +1,11 @@
 "use client";
 
 import { Flex, HStack, Stack, Text, Wrap } from "@chakra-ui/react";
-import { AiOutlineGitlab } from "react-icons/ai";
+// import { AiOutlineGitlab } from "react-icons/ai";
 import Xarrow from "react-xarrows";
 import { BsInfo } from "react-icons/bs";
+import Lottie from "lottie-react";
+import Animation from "../../public/assets/animations/circle2.json";
 
 export default function MainTitle() {
   return (
@@ -80,7 +82,8 @@ export default function MainTitle() {
         mt="50"
       >
         <HStack w={["full", null, "50%"]} justify="center">
-          <AiOutlineGitlab color="white" size="300px" height="100px" />
+          {/* <AiOutlineGitlab color="white" size="300px" height="100px" /> */}
+          <Lottie className="h-[50vh] mt-4" animationData={Animation} />
         </HStack>
 
         <HStack
