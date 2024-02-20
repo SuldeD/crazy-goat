@@ -1,5 +1,5 @@
 import axios from "axios";
-import { revalidatePath } from "next/cache";
+// import { revalidatePath } from "next/cache";
 import Cookies from "universal-cookie";
 
 const GAME_DOMAIN = "https://api-game.mongolnft.com/";
@@ -47,7 +47,7 @@ const createTournamentAPI = async (data) => {
 
   try {
     const response = await axios.request(config);
-    revalidatePath("/");
+    // revalidatePath("/");
     return response;
   } catch (error) {
     console.log(error);

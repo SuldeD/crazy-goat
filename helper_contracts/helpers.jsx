@@ -32,6 +32,20 @@ function format18(amount) {
   return ethers.utils.formatUnits(amount.toString(), 18);
 }
 
+function convertPercentagesToWeiArray(percentages) {
+  const totalPercentage = percentages.reduce(
+    (acc, percent) => acc + percent,
+    0
+  );
+
+  if (totalPercentage > 100) {
+    throw new Error("Total percentage must be equal to or less than 100");
+  }
+
+  const multiplier = 1e18 / totalPercentage; // Adjusted multiplier
+
+  return percentages.map((percent) => percent * multiplier);
+}
 export {
   toInteger18,
   toFloat18,
@@ -40,4 +54,5 @@ export {
   format,
   format18,
   getContractEssentials,
+  convertPercentagesToWeiArray,
 };

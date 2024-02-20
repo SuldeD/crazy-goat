@@ -1,7 +1,11 @@
+/* eslint-disable no-unused-vars */
 "use client";
 
 import { getTournamentFactoryContract } from "../../helper_contracts/TournamentFactoryContractHelper";
-import { parse18 } from "../../helper_contracts/helpers";
+import {
+  parse18,
+  convertPercentagesToWeiArray,
+} from "../../helper_contracts/helpers";
 import MButton from "../Button";
 import MInput from "../Input";
 import MText from "../Text";
@@ -23,15 +27,22 @@ export default function CreateTournament() {
 
       const { tournamentFactoryWriteContract, tournamentFactoryReadContract } =
         await getTournamentFactoryContract();
+      console.log(
+        tournamentFactoryReadContract,
+        "tournamentFactoryReadContract"
+      );
+      console.log(
+        tournamentFactoryWriteContract,
+        "tournamentFactoryWriteContract"
+      );
       let tournamentDetails = [name, image];
       let dateEnd = moment(endTime).unix();
       let endtime = dateEnd - Math.floor(Date.now() / 1000);
-      const percent = 90;
-      const wei = parse18(percent);
+      const percentages = [50, 30, 20];
       const tx = await tournamentFactoryWriteContract.createTournament(
         window?.ethereum?.selectedAddress,
         endtime,
-        wei,
+        percentages,
         tournamentDetails
       );
       await tx.wait();
@@ -58,6 +69,11 @@ export default function CreateTournament() {
         date.getMonth() + 1
       }/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 
+      console.log("Tournament Address: ", tournamentAddress);
+      console.log("Name: ", name);
+      console.log("Description: ", desc);
+      console.log("Image: ", image);
+
       let data = JSON.stringify({
         address: tournamentAddress,
         name: name,
@@ -67,10 +83,12 @@ export default function CreateTournament() {
         live_price: 0.01,
         start_datetime: `${outputPresent}59`,
         end_datetime: output,
-        toy_ids: [1, 3],
+        toy_ids: [1, 3, 4],
         winner_percentage: 90,
       });
+
       const res = await createTournamentAPI(data);
+      console.log(res);
       toast({
         title: "Tournament created.",
         description: "We've created tournament.",
@@ -178,7 +196,7 @@ export default function CreateTournament() {
                 </>
               )}
             </Field>
-            <Select
+            {/* <Select
               placeholder="Select"
               textColor="white"
               rounded="35px"
@@ -192,11 +210,11 @@ export default function CreateTournament() {
               <option value="pub">Public</option>
               <option value="wolf">The Wolves</option>
               <option value="maral">The Marals</option>
-            </Select>
-            {!selectData && (
+            </Select> */}
+            {/* {!selectData && (
               <Text color="rgba(255,145,0,.831)">Select is required</Text>
-            )}
-            {selectData && selectData !== "pub" && (
+            )} */}
+            {/* {selectData && selectData !== "pub" && (
               <Image
                 onClick={() => {
                   selectData == "wolf"
@@ -228,7 +246,7 @@ export default function CreateTournament() {
                     : ""
                 }
               />
-            )}
+            )} */}
           </Stack>
           <MButton
             w="full"
