@@ -3,10 +3,11 @@
 
 import { useState } from "react";
 import StickNinja from "../../../../components/stick_hero/Ninja";
-import { Game } from "../../../../components/flappy_wolf/Game";
+// import { Game } from "../../../../components/flappy_wolf/Game";
 import Rabbit from "../../../../components/rabbit";
 import Cookies from "universal-cookie";
 import { getTournament, getToyInfo } from "services/getService";
+// import { IoGameController } from "react-icons/io5";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -37,7 +38,7 @@ export default async function Tournament({ params }) {
   const toast = useToast();
   const router = useRouter();
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onClose } = useDisclosure();
   const [tournoment, setTournoment] = useState("");
 
   const toyRes = await getToyInfo({ id: params.slag, jwtToken: jwtToken });
@@ -101,6 +102,10 @@ export default async function Tournament({ params }) {
     count: Yup.string().required("Required"),
   });
 
+  // useEffect(() => {
+  //   toyRes?.data?.tournoment_user?.tournoment_live == 0 && onOpen();
+  // }, [toyRes?.data?.tournoment_user?.tournoment_live, onOpen]);
+
   return (
     <div className="w-full">
       {params.name == "StickNinja" && (
@@ -112,7 +117,7 @@ export default async function Tournament({ params }) {
           life={toyRes?.data?.tournoment_user?.tournoment_live}
         />
       )}
-      {params.name == "FlappyWolf" && (
+      {/* {params.name == "FlappyWolf" && (
         <Flex justify="center" gap="10">
           <AlertDialog motionPreset="slideInBottom" isOpen={isOpen} isCentered>
             <AlertDialogOverlay />
@@ -233,7 +238,8 @@ export default async function Tournament({ params }) {
             life={toyRes?.data?.tournoment_user?.tournoment_live}
           />
         </Flex>
-      )}
+      )} */}
+
       {params.name === "SpaceRabbit" && (
         <Flex justify="center" gap="10">
           <AlertDialog motionPreset="slideInBottom" isOpen={isOpen} isCentered>
@@ -295,65 +301,66 @@ export default async function Tournament({ params }) {
               </AlertDialogBody>
             </AlertDialogContent>
           </AlertDialog>
-          <Wrap justify="space-between" wrap={true} mb="8">
-            <Stack
-              borderRadius="20px"
-              bg="whiteAlpha.100"
-              px="5"
-              justify="center"
-              minH="100px"
-              w={["100%", "100%", "100%"]}
-              mb="4"
-            >
-              <HStack mb="1">
-                <Text fontFamily="primary" fontSize="20px" textColor="white">
-                  Total Score
-                </Text>
-                <Text fontFamily="primary" fontSize="18px" textColor="white">
-                  <AiFillStar />
-                </Text>
-              </HStack>
-              <Text
-                fontFamily="primary"
-                fontSize="32px"
-                fontWeight="500"
-                textColor="yellow.primary"
+          <div>
+            <Wrap justify="space-between" wrap={true} className="pb-10">
+              <Stack
+                borderRadius="20px"
+                bg="whiteAlpha.100"
+                px="5"
+                justify="center"
+                minH="100px"
+                w={["100%", "32%", "30%"]}
               >
-                {toyRes?.data?.tournoment_user?.point}
-              </Text>
-            </Stack>
-            <Stack
-              borderRadius="20px"
-              bg="whiteAlpha.100"
-              px="5"
-              justify="center"
-              minH="100px"
-              w={["100%", "100%", "100%"]}
-            >
-              <HStack mb="1">
-                <Text fontFamily="primary" fontSize="20px" textColor="white">
-                  Life
+                <HStack mb="1">
+                  <Text fontFamily="primary" fontSize="20px" textColor="white">
+                    Total Score
+                  </Text>
+                  <Text fontFamily="primary" fontSize="18px" textColor="white">
+                    <AiFillStar />
+                  </Text>
+                </HStack>
+                <Text
+                  fontFamily="primary"
+                  fontSize="32px"
+                  fontWeight="500"
+                  textColor="yellow.primary"
+                >
+                  {toyRes?.data?.tournoment_user?.point}
                 </Text>
-                <Text fontFamily="primary" fontSize="18px" textColor="white">
-                  <AiFillHeart />
-                </Text>
-              </HStack>
-              <Text
-                fontFamily="primary"
-                fontSize="32px"
-                fontWeight="500"
-                textColor="yellow.primary"
+              </Stack>
+              <Stack
+                borderRadius="20px"
+                bg="whiteAlpha.100"
+                px="5"
+                justify="center"
+                minH="100px"
+                w={["100%", "32%", "30%"]}
               >
-                {toyRes?.data?.tournoment_user?.tournoment_live}
-              </Text>
-            </Stack>
-          </Wrap>
-          <Rabbit
-            tour_id={params?.slag}
-            updateTournomentDetailData={updateTournomentDetailData}
-            life={toyRes?.data?.tournoment_user?.tournoment_live}
-            data={data}
-          />
+                <HStack mb="1">
+                  <Text fontFamily="primary" fontSize="20px" textColor="white">
+                    Life
+                  </Text>
+                  <Text fontFamily="primary" fontSize="18px" textColor="white">
+                    <AiFillHeart />
+                  </Text>
+                </HStack>
+                <Text
+                  fontFamily="primary"
+                  fontSize="32px"
+                  fontWeight="500"
+                  textColor="yellow.primary"
+                >
+                  {toyRes?.data?.tournoment_user?.tournoment_live}
+                </Text>
+              </Stack>
+            </Wrap>
+            <Rabbit
+              tour_id={params?.slag}
+              updateTournomentDetailData={updateTournomentDetailData}
+              life={toyRes?.data?.tournoment_user?.tournoment_live}
+              data={data}
+            />
+          </div>
         </Flex>
       )}
     </div>

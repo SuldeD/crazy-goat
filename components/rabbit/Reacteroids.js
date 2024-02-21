@@ -22,7 +22,7 @@ const KEY = {
 };
 
 let interval = null;
-let player = window.ethereum.selectedAddress;
+let player = window?.ethereum?.selectedAddress;
 let user_id = "";
 let check_str = "";
 let mid_check_str_history = [];
@@ -94,27 +94,21 @@ export class Reacteroids extends Component {
     });
   }
 
-  // componentDidMount() {
-  //   const { tour_id, updateTournomentDetailData, life } = this.props;
-  //   console.log("Received", life);
-  //   this.id = tour_id;
+  componentDidMount() {
+    const { tour_id, updateTournomentDetailData, life } = this.props;
+    console.log("Received", life);
+    this.id = tour_id;
 
-  //   window.addEventListener("keyup", this.handleKeys.bind(this, false));
-  //   window.addEventListener("keydown", this.handleKeys.bind(this, true));
-  //   window.addEventListener("resize", this.handleResize.bind(this, false));
+    window.addEventListener("keyup", this.handleKeys.bind(this, false));
+    window.addEventListener("keydown", this.handleKeys.bind(this, true));
+    window.addEventListener("resize", this.handleResize.bind(this, false));
 
-  //   const context = this.canvasRef.getContext("2d");
-  //   this.setState({ context: context }); // Use this.props.tour_id here
-  //   this.startGame();
-  //   requestAnimationFrame(() => {
-  //     this.update();
-  //   });
-  // }
-
-  componentWillUnmount() {
-    window.removeEventListener("keyup", this.handleKeys);
-    window.removeEventListener("keydown", this.handleKeys);
-    window.removeEventListener("resize", this.handleResize);
+    const context = this.canvasRef.getContext("2d");
+    this.setState({ context: context }); // Use this.props.tour_id here
+    this.startGame();
+    requestAnimationFrame(() => {
+      this.update();
+    });
   }
 
   update() {

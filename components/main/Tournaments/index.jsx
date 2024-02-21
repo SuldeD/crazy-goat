@@ -150,9 +150,11 @@ export function MCard({ id, Tg }) {
 
 export default function Tournaments({ products }) {
   const [tab, setTab] = useState();
+
   return (
     <Stack mt="32">
       <HeadingText text="Tournaments" />
+
       <Tabs
         position="relative"
         variant="unstyled"
@@ -221,16 +223,18 @@ export default function Tournaments({ products }) {
               minH="20vh"
             >
               {products?.data?.tournoments.length > 0 &&
-              products?.data?.tournoments?.some(
-                (tg) => tg.status == "active"
+              products?.data?.tournoments?.filter(
+                (tg) => tg.status === "active"
               ) ? (
-                products?.data?.tournoments?.map((Tg, id) => {
-                  return (
-                    <WrapItem w="full" key={id}>
-                      <MCard id={id} Tg={Tg} />
-                    </WrapItem>
-                  );
-                })
+                products?.data?.tournoments
+                  ?.filter((tg) => tg.status === "active")
+                  .map((Tg, id) => {
+                    return (
+                      <WrapItem w="full" key={id}>
+                        <MCard id={id} Tg={Tg} />
+                      </WrapItem>
+                    );
+                  })
               ) : (
                 <Flex justify="center">
                   <Stack w="full">
@@ -256,15 +260,17 @@ export default function Tournaments({ products }) {
             >
               {products?.data?.tournoments.length > 0 &&
               products?.data?.tournoments?.some(
-                (tg) => tg.status == "history"
+                (tg) => tg.status === "history"
               ) ? (
-                products?.data?.tournoments?.map((Tg, id) => {
-                  return (
-                    <WrapItem w="full" key={id}>
-                      <MCard id={id} Tg={Tg} />
-                    </WrapItem>
-                  );
-                })
+                products?.data?.tournoments
+                  ?.filter((tg) => tg.status === "history")
+                  .map((Tg, id) => {
+                    return (
+                      <WrapItem w="full" key={id}>
+                        <MCard id={id} Tg={Tg} />
+                      </WrapItem>
+                    );
+                  })
               ) : (
                 <Flex justify="center">
                   <Stack w="full">
