@@ -27,9 +27,7 @@ let user_id = "";
 let check_str = "";
 let mid_check_str_history = [];
 let mid_check_str = "";
-let tour_id = "";
-let updateTournomentDetailData = "";
-let life = "";
+let id = 0;
 
 export class Reacteroids extends Component {
   constructor() {
@@ -81,20 +79,37 @@ export class Reacteroids extends Component {
   }
 
   componentDidMount() {
-    tour_id, updateTournomentDetailData, (life = this.props);
-    console.log("Received", tour_id, updateTournomentDetailData, life);
+    const { tour_id, updateTournomentDetailData, life } = this.props;
+    console.log("Received", life);
+    this.id = tour_id;
 
-    window.addEventListener("keyup", this.handleKeys.bind(this, false));
-    window.addEventListener("keydown", this.handleKeys.bind(this, true));
-    window.addEventListener("resize", this.handleResize.bind(this, false));
+    window.addEventListener("keyup", (e) => this.handleKeys(false, e));
+    window.addEventListener("keydown", (e) => this.handleKeys(true, e));
+    window.addEventListener("resize", this.handleResize);
 
     const context = this.canvasRef.getContext("2d");
-    this.setState({ context: context });
-    this.startGame();
-    requestAnimationFrame(() => {
-      this.update();
+    this.setState({ context }, () => {
+      this.startGame();
+      requestAnimationFrame(this.update);
     });
   }
+
+  // componentDidMount() {
+  //   const { tour_id, updateTournomentDetailData, life } = this.props;
+  //   console.log("Received", life);
+  //   this.id = tour_id;
+
+  //   window.addEventListener("keyup", this.handleKeys.bind(this, false));
+  //   window.addEventListener("keydown", this.handleKeys.bind(this, true));
+  //   window.addEventListener("resize", this.handleResize.bind(this, false));
+
+  //   const context = this.canvasRef.getContext("2d");
+  //   this.setState({ context: context }); // Use this.props.tour_id here
+  //   this.startGame();
+  //   requestAnimationFrame(() => {
+  //     this.update();
+  //   });
+  // }
 
   componentWillUnmount() {
     window.removeEventListener("keyup", this.handleKeys);
@@ -148,30 +163,66 @@ export class Reacteroids extends Component {
   }
 
   async onInit() {
-    let data = "";
-    let config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: `https://api-game.mongolnft.com/api/gamestart-web3/?tour_id=${this.tour_id}&toy_id=4`,
-      headers: {
-        Authorization: `JWT ${this.jwtToken}`,
-      },
-      data: data,
-    };
     try {
-      axios.request(config).then((response) => {
-        let current_player =
-          response?.data?.data?.game_start?.user?.username.toLowerCase();
-        if (current_player == player) {
-          check_str = response?.data?.data?.game_start?.check_str;
-          user_id = response?.data?.data?.game_start?.user?.id;
-          console.log(JSON.stringify(response?.data));
-        }
+      const response = await this.makeApiRequest("gamestart-web3", {
+        tour_id: this.id,
+        toy_id: 4,
       });
+
+      const current_player =
+        response?.data?.data?.game_start?.user?.username.toLowerCase();
+      if (current_player === player) {
+        check_str = response?.data?.data?.game_start?.check_str;
+        user_id = response?.data?.data?.game_start?.user?.id;
+        console.log(JSON.stringify(response?.data));
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
+
+  makeApiRequest = async (endpoint, data) => {
+    try {
+      const config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url: `https://api-game.mongolnft.com/api/${endpoint}/`,
+        headers: {
+          Authorization: `JWT ${jwtToken}`,
+        },
+        data: JSON.stringify(data),
+      };
+      return await axios.request(config);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  // async onInit() {
+  //   let data = "";
+  //   let config = {
+  //     method: "get",
+  //     maxBodyLength: Infinity,
+  //     url: `https://api-game.mongolnft.com/api/gamestart-web3/?tour_id=${this.id}&toy_id=4`,
+  //     headers: {
+  //       Authorization: `JWT ${jwtToken}`,
+  //     },
+  //     data: data,
+  //   };
+  //   try {
+  //     axios.request(config).then((response) => {
+  //       let current_player =
+  //         response?.data?.data?.game_start?.user?.username.toLowerCase();
+  //       if (current_player == player) {
+  //         check_str = response?.data?.data?.game_start?.check_str;
+  //         user_id = response?.data?.data?.game_start?.user?.id;
+  //         console.log(JSON.stringify(response?.data));
+  //       }
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   async startGame() {
     this.setState({
@@ -195,12 +246,94 @@ export class Reacteroids extends Component {
     this.generateAsteroids(this.state.asteroidCount);
 
     await this.onInit();
+
+    interval = setInterval(() => {
+      this.game_mid();
+    }, 10000);
+  }
+
+  async game_mid() {
+    let data = JSON.stringify({
+      tour_id: this.id,
+      toy_id: 4,
+      point: this.state.currentScore,
+      check_str: check_str,
+      back_str: "",
+    });
+    console.log("check_str: ", check_str);
+
+    let config2 = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "https://api-game.mongolnft.com/api/gamemid-web3/",
+      headers: {
+        Authorization: `JWT ${jwtToken}`,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+    axios
+      .request(config2)
+      .then((response) => {
+        mid_check_str = response.data.data.mid_check_str;
+        mid_check_str_history.push(mid_check_str);
+        console.log(mid_check_str_history.length);
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  async onFinishGame(score) {
+    clearInterval(interval);
+    try {
+      const makeHashParams = [
+        user_id.toString(),
+        score.toString(),
+        check_str,
+        ...mid_check_str_history.map((item) => item.toString()),
+      ];
+      let back_str = await makeHash(makeHashParams, score);
+      console.log("life: ", this.life);
+
+      let data = JSON.stringify({
+        tour_id: this.id,
+        toy_id: 4,
+        point: score,
+        check_str: check_str,
+        back_str: back_str,
+      });
+
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: "https://api-game.mongolnft.com/api/gameend-web3/",
+        headers: {
+          Authorization: `JWT ${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+        data: data,
+      };
+
+      axios.request(config).then((response) => {
+        console.log(JSON.stringify(response.data));
+      });
+      mid_check_str_history = [];
+      back_str = "";
+    } catch (error) {
+      console.log(error);
+    }
+    // clearInterval(interval);
+    interval = null;
   }
 
   gameOver() {
     this.setState({
       inGame: false,
     });
+
+    this.onFinishGame(this.state.currentScore);
 
     // Replace top score
     if (this.state.currentScore > this.state.topScore) {
