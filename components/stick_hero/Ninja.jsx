@@ -745,7 +745,7 @@ export default function NinjaGame({
 
       let info = JSON.stringify({
         transaction_hash: tx.hash,
-        chain: "polygon",
+        chain: "mumbai",
         tournoment_id: data.id,
       });
       const res = await buyLifeAPI(info);

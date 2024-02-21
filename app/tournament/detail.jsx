@@ -85,7 +85,7 @@ export const Detail = ({
 
       const info = JSON.stringify({
         transaction_hash: tx.hash,
-        chain: "polygon",
+        chain: "mumbai",
         tournoment_id: data.id,
       });
 
