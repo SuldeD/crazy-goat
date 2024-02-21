@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-async-client-component */
 "use client";
 
 import { useState } from "react";
@@ -66,7 +67,7 @@ export default async function Tournament({ params }) {
 
       let info = JSON.stringify({
         transaction_hash: tx.hash,
-        chain: "polygon",
+        chain: "mumbai",
         tournoment_id: data?.data?.tournoment?.id,
       });
       const res = await buyLifeAPI(info);

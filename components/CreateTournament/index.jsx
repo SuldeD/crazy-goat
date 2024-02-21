@@ -84,6 +84,7 @@ export default function CreateTournament() {
         start_datetime: `${outputPresent}59`,
         end_datetime: output,
         toy_ids: [1, 3, 4],
+        nfts: [],
         winner_percentage: 90,
       });
 
