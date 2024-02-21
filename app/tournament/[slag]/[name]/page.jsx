@@ -4,6 +4,7 @@
 import { useState } from "react";
 import StickNinja from "../../../../components/stick_hero/Ninja";
 import { Game } from "../../../../components/flappy_wolf/Game";
+import Rabbit from "../../../../components/rabbit";
 import Cookies from "universal-cookie";
 import { getTournament, getToyInfo } from "services/getService";
 import {
@@ -230,6 +231,128 @@ export default async function Tournament({ params }) {
             onOpen={onOpen}
             updateTournomentDetailData={updateTournomentDetailData}
             life={toyRes?.data?.tournoment_user?.tournoment_live}
+          />
+        </Flex>
+      )}
+      {params.name === "SpaceRabbit" && (
+        <Flex justify="center" gap="10">
+          <AlertDialog motionPreset="slideInBottom" isOpen={isOpen} isCentered>
+            <AlertDialogOverlay />
+            <AlertDialogContent bg="black" rounded="20px" p="5">
+              <AlertDialogHeader textColor="white">Buy life</AlertDialogHeader>
+
+              <AlertDialogBody>
+                <Text mb="3" fontFamily="primary" fontSize="16px" color="white">
+                  description
+                </Text>
+                <Formik
+                  validationSchema={lifeSchema}
+                  initialValues={{ count: "" }}
+                  onSubmit={async (values) => {
+                    await handleBuyLife(values);
+                    actions.setSubmitting(false);
+                  }}
+                >
+                  {(props) => (
+                    <Form>
+                      <Stack w="full" gap="2">
+                        <Field name="count">
+                          {({ field, form }) => (
+                            <>
+                              <MInput
+                                id="life"
+                                mt="1"
+                                min={1}
+                                {...field}
+                                placeholder="Life count"
+                                type="number"
+                              />
+                              <Text color="rgba(255,145,0,.831)" mt="1">
+                                {form.touched.count && form.errors.count}
+                              </Text>
+                            </>
+                          )}
+                        </Field>
+
+                        <MButton
+                          w="full"
+                          type="submit"
+                          text="Buy Life"
+                          isLoading={props.isSubmitting}
+                        />
+
+                        <MButton
+                          mt="4"
+                          w="full"
+                          text="Exit"
+                          isLoading={props.isSubmitting}
+                          onClick={() => router.back()}
+                        />
+                      </Stack>
+                    </Form>
+                  )}
+                </Formik>
+              </AlertDialogBody>
+            </AlertDialogContent>
+          </AlertDialog>
+          <Wrap justify="space-between" wrap={true} mb="8">
+            <Stack
+              borderRadius="20px"
+              bg="whiteAlpha.100"
+              px="5"
+              justify="center"
+              minH="100px"
+              w={["100%", "100%", "100%"]}
+              mb="4"
+            >
+              <HStack mb="1">
+                <Text fontFamily="primary" fontSize="20px" textColor="white">
+                  Total Score
+                </Text>
+                <Text fontFamily="primary" fontSize="18px" textColor="white">
+                  <AiFillStar />
+                </Text>
+              </HStack>
+              <Text
+                fontFamily="primary"
+                fontSize="32px"
+                fontWeight="500"
+                textColor="yellow.primary"
+              >
+                {toyRes?.data?.tournoment_user?.point}
+              </Text>
+            </Stack>
+            <Stack
+              borderRadius="20px"
+              bg="whiteAlpha.100"
+              px="5"
+              justify="center"
+              minH="100px"
+              w={["100%", "100%", "100%"]}
+            >
+              <HStack mb="1">
+                <Text fontFamily="primary" fontSize="20px" textColor="white">
+                  Life
+                </Text>
+                <Text fontFamily="primary" fontSize="18px" textColor="white">
+                  <AiFillHeart />
+                </Text>
+              </HStack>
+              <Text
+                fontFamily="primary"
+                fontSize="32px"
+                fontWeight="500"
+                textColor="yellow.primary"
+              >
+                {toyRes?.data?.tournoment_user?.tournoment_live}
+              </Text>
+            </Stack>
+          </Wrap>
+          <Rabbit
+            tour_id={params?.slag}
+            updateTournomentDetailData={updateTournomentDetailData}
+            life={toyRes?.data?.tournoment_user?.tournoment_live}
+            data={data}
           />
         </Flex>
       )}
