@@ -134,6 +134,25 @@ export default function NinjaGame({
       }
     }
 
+    function handleKeyDown(event) {
+      if (event.key === " ") {
+        event.preventDefault();
+        resetGame();
+        return;
+      }
+    }
+
+    function handleResize() {
+      if (canvasRef.current) {
+        canvasRef.current.width = rootRef.current.clientWidth;
+        canvasRef.current.height = rootRef.current.clientHeight;
+        draw();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("resize", handleResize);
+
     // Add event listeners for mouse events
     rootRef.current.addEventListener("mousedown", handleStart);
     rootRef.current.addEventListener("mouseup", handleEnd);
@@ -149,6 +168,10 @@ export default function NinjaGame({
         draw();
       }
     });
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   Math.sinus = function (degree) {
@@ -174,12 +197,6 @@ export default function NinjaGame({
     generatePlatform();
     generatePlatform();
     generatePlatform();
-    generatePlatform();
-    generatePlatform();
-    generatePlatform();
-
-    // console.log("platforms");
-    // console.log(platforms);
 
     sticks = [{ x: platforms[0].x + platforms[0].w, length: 0, rotation: 0 }];
 
@@ -730,7 +747,6 @@ export default function NinjaGame({
     event.preventDefault();
     resetGame();
     restartRef.current.style.display = "none";
-
     updateTournomentDetailData();
   };
 
