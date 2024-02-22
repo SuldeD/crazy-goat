@@ -174,6 +174,9 @@ export default function NinjaGame({
     generatePlatform();
     generatePlatform();
     generatePlatform();
+    generatePlatform();
+    generatePlatform();
+    generatePlatform();
 
     // console.log("platforms");
     // console.log(platforms);

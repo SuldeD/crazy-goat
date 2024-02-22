@@ -19,7 +19,9 @@ let roundScore = 0;
 let interval = null;
 let shouldWait = false;
 
-let player = window.ethereum.selectedAddress;
+const accounts = await ethereum.request({ method: "eth_accounts" });
+const player = accounts[0];
+
 let user_id = "";
 let check_str = "";
 let mid_check_str_history = [];

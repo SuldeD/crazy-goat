@@ -6,8 +6,8 @@ async function verifyMessage() {
   if (!ethereum || !ethereum?.selectedAddress) {
     throw new Error("Ethereum wallet is not connected");
   }
-
   const address = ethereum.selectedAddress;
+
   const dateTime = new Date().getTime();
   const message = `Authentication required\nwallet:${address}\nnonce:${dateTime}`;
 

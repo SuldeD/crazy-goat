@@ -136,8 +136,6 @@ export const Detail = ({
     );
   };
 
-  console.log(games, "games");
-
   return (
     <Grid justify="center" templateColumns="repeat(12, 1fr)">
       <GridItem colSpan={12} position="relative">

@@ -56,11 +56,28 @@ export const Header = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { hostNftReadContract } = await getHostNftContract();
-        const balance = await hostNftReadContract.balanceOf(
-          window.ethereum.selectedAddress
-        );
-        setUserHost(balance?.toNumber() > 0);
+        if (window.ethereum) {
+          // Request accounts using eth_accounts method
+          const accounts = await window.ethereum.request({
+            method: "eth_accounts",
+          });
+
+          if (accounts.length > 0) {
+            // Update wallet connection status
+            setIsWalletConnected(true);
+
+            const { hostNftReadContract } = await getHostNftContract();
+            // Use the first account from the returned accounts array
+            const balance = await hostNftReadContract.balanceOf(accounts[0]);
+            setUserHost(balance?.toNumber() > 0);
+          } else {
+            // No accounts available, update wallet connection status accordingly
+            setIsWalletConnected(false);
+          }
+        } else {
+          // MetaMask is not installed or not enabled, handle accordingly
+          console.error("MetaMask is not installed or not enabled!");
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }

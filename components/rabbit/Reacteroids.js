@@ -22,7 +22,7 @@ const KEY = {
 };
 
 let interval = null;
-let player = window?.ethereum?.selectedAddress;
+let player = "";
 let user_id = "";
 let check_str = "";
 let mid_check_str_history = [];
@@ -34,9 +34,9 @@ export class Reacteroids extends Component {
     super();
     this.state = {
       screen: {
-        width: window.innerWidth,
-        height: window.innerHeight,
-        ratio: window.devicePixelRatio || 1,
+        width: 0,
+        height: 0,
+        ratio: 1,
       },
       context: null,
       keys: {
@@ -48,8 +48,8 @@ export class Reacteroids extends Component {
       },
       asteroidCount: 3,
       currentScore: 0,
-      topScore: localStorage["topscore"] || 0,
       inGame: false,
+      showPlayButton: true,
     };
     this.ship = [];
     this.asteroids = [];
@@ -78,37 +78,63 @@ export class Reacteroids extends Component {
     });
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { tour_id, updateTournomentDetailData, life } = this.props;
-    console.log("Received", life);
     this.id = tour_id;
 
-    window.addEventListener("keyup", (e) => this.handleKeys(false, e));
-    window.addEventListener("keydown", (e) => this.handleKeys(true, e));
-    window.addEventListener("resize", this.handleResize);
+    try {
+      if (window.ethereum) {
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
+        });
+        if (accounts.length > 0) {
+          player = accounts[0];
+        } else {
+          console.error("No Ethereum accounts available.");
+        }
+      } else {
+        console.error("MetaMask is not installed or not enabled!");
+      }
+    } catch (error) {
+      console.error("Error connecting to Ethereum wallet:", error);
+    }
 
-    const context = this.canvasRef.getContext("2d");
-    this.setState({ context }, () => {
-      this.startGame();
-      requestAnimationFrame(this.update);
-    });
-  }
-
-  componentDidMount() {
-    const { tour_id, updateTournomentDetailData, life } = this.props;
-    console.log("Received", life);
-    this.id = tour_id;
+    this.handleResize(); // Initial size calculation
 
     window.addEventListener("keyup", this.handleKeys.bind(this, false));
     window.addEventListener("keydown", this.handleKeys.bind(this, true));
-    window.addEventListener("resize", this.handleResize.bind(this, false));
+    window.addEventListener("resize", this.handleResize.bind(this));
+
+    this.setState({
+      showPlayButton: true,
+    });
 
     const context = this.canvasRef.getContext("2d");
-    this.setState({ context: context }); // Use this.props.tour_id here
-    this.startGame();
-    requestAnimationFrame(() => {
-      this.update();
+    this.setState({ context: context });
+
+    if (!this.state.showPlayButton) {
+      this.startGame();
+
+      requestAnimationFrame(() => {
+        this.update();
+      });
+    }
+  }
+
+  handleResize() {
+    this.setState({
+      screen: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        ratio: window.devicePixelRatio || 1,
+      },
     });
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("keyup", this.handleKeys);
+    window.removeEventListener("keydown", this.handleKeys);
+    window.removeEventListener("resize", this.handleResize);
   }
 
   update() {
@@ -157,71 +183,36 @@ export class Reacteroids extends Component {
   }
 
   async onInit() {
+    let data = "";
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `https://api-game.mongolnft.com/api/gamestart-web3/?tour_id=${this.id}&toy_id=4`,
+      headers: {
+        Authorization: `JWT ${jwtToken}`,
+      },
+      data: data,
+    };
     try {
-      const response = await this.makeApiRequest("gamestart-web3", {
-        tour_id: this.id,
-        toy_id: 4,
+      axios.request(config).then((response) => {
+        let current_player =
+          response?.data?.data?.game_start?.user?.username.toLowerCase();
+        if (current_player == player) {
+          check_str = response?.data?.data?.game_start?.check_str;
+          user_id = response?.data?.data?.game_start?.user?.id;
+          console.log(JSON.stringify(response?.data));
+        }
       });
-
-      const current_player =
-        response?.data?.data?.game_start?.user?.username.toLowerCase();
-      if (current_player === player) {
-        check_str = response?.data?.data?.game_start?.check_str;
-        user_id = response?.data?.data?.game_start?.user?.id;
-        console.log(JSON.stringify(response?.data));
-      }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   }
-
-  makeApiRequest = async (endpoint, data) => {
-    try {
-      const config = {
-        method: "get",
-        maxBodyLength: Infinity,
-        url: `https://api-game.mongolnft.com/api/${endpoint}/`,
-        headers: {
-          Authorization: `JWT ${jwtToken}`,
-        },
-        data: JSON.stringify(data),
-      };
-      return await axios.request(config);
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  // async onInit() {
-  //   let data = "";
-  //   let config = {
-  //     method: "get",
-  //     maxBodyLength: Infinity,
-  //     url: `https://api-game.mongolnft.com/api/gamestart-web3/?tour_id=${this.id}&toy_id=4`,
-  //     headers: {
-  //       Authorization: `JWT ${jwtToken}`,
-  //     },
-  //     data: data,
-  //   };
-  //   try {
-  //     axios.request(config).then((response) => {
-  //       let current_player =
-  //         response?.data?.data?.game_start?.user?.username.toLowerCase();
-  //       if (current_player == player) {
-  //         check_str = response?.data?.data?.game_start?.check_str;
-  //         user_id = response?.data?.data?.game_start?.user?.id;
-  //         console.log(JSON.stringify(response?.data));
-  //       }
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
 
   async startGame() {
     this.setState({
       inGame: true,
       currentScore: 0,
+      showPlayButton: false,
     });
 
     // Make ship
@@ -233,6 +224,7 @@ export class Reacteroids extends Component {
       create: this.createObject.bind(this),
       onDie: this.gameOver.bind(this),
     });
+
     this.createObject(ship, "ship");
 
     // Make asteroids
@@ -241,9 +233,19 @@ export class Reacteroids extends Component {
 
     await this.onInit();
 
-    interval = setInterval(() => {
-      this.game_mid();
-    }, 10000);
+    // Check if the canvas is ready before starting the game
+    if (this.state.context) {
+      interval = setInterval(() => {
+        this.game_mid();
+      }, 10000);
+
+      // Start the game loop
+      requestAnimationFrame(() => {
+        this.update();
+      });
+    } else {
+      console.error("Canvas context not ready.");
+    }
   }
 
   async game_mid() {
@@ -325,17 +327,10 @@ export class Reacteroids extends Component {
   gameOver() {
     this.setState({
       inGame: false,
+      showPlayButton: true,
     });
 
-    this.onFinishGame(this.state.currentScore);
-
-    // Replace top score
-    if (this.state.currentScore > this.state.topScore) {
-      this.setState({
-        topScore: this.state.currentScore,
-      });
-      localStorage["topscore"] = this.state.currentScore;
-    }
+    this.onFinishGame(this.state.currentScore / 4);
   }
 
   generateAsteroids(howMany) {
@@ -410,26 +405,19 @@ export class Reacteroids extends Component {
     let endgame;
     let message;
 
-    if (this.state.currentScore <= 0) {
-      message = "0 points... So sad.";
-    } else if (this.state.currentScore >= this.state.topScore) {
-      message = "Top score with " + this.state.currentScore + " points. Woo!";
-    } else {
-      message = this.state.currentScore + " Points though :)";
-    }
-
     if (!this.state.inGame) {
       endgame = (
         <div className="endgame">
-          <p>Game over, man!</p>
           <p className="font-bold">{message}</p>
 
-          <MButton
-            onClick={this.startGame.bind(this)}
-            text="try again?"
-            className="mt-2"
-            w="100%"
-          />
+          {this.state.showPlayButton && (
+            <MButton
+              onClick={this.startGame.bind(this)}
+              text="Play"
+              className="mt-2"
+              w="100%"
+            />
+          )}
         </div>
       );
     }
@@ -437,17 +425,23 @@ export class Reacteroids extends Component {
     return (
       <div className="text-white border">
         {endgame}
-        <span className="score current-score">
-          Score: {this.state.currentScore}
-        </span>
-        <span className="score top-score">
-          Top Score: {this.state.topScore}
-        </span>
-        <span className="controls">
-          Use [A][S][W][D] or [←][↑][↓][→] to MOVE
-          <br />
-          Use [RETURN] to SHOOT
-        </span>
+        {this.state.inGame && (
+          <span className="score current-score">
+            Score: {this.state.currentScore}
+          </span>
+        )}
+        {this.state.inGame && (
+          <span className="score top-score">
+            Top Score: {this.state.topScore}
+          </span>
+        )}
+        {this.state.inGame && (
+          <span className="controls">
+            Use [A][S][W][D] or [←][↑][↓][→] to MOVE
+            <br />
+            Use [RETURN] to SHOOT
+          </span>
+        )}
         <div className="">
           <canvas
             ref={(canvas) => {
