@@ -127,7 +127,7 @@ export default class Ship {
     context.height = "300px";
     context.strokeStyle = "#ffffff";
     const newImage = new Image(30, 30);
-    // newImage.src = "http://localhost:5174/space_rabbit_v2.svg";
+    newImage.src = "http://localhost:5174/space_rabbit_v2.svg";
     // newImage.w = 2;
     newImage.height = "24px";
     newImage.width = "24px";
