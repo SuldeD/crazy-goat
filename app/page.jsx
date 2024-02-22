@@ -14,7 +14,6 @@ export default async function Home() {
   return (
     <main className="w-full">
       <MainTitle />
-      <img src="/space_rabbit_v2.svg" alt="" className="w-12 h-12" />
       <About />
       <Tournaments products={products} />
     </main>
