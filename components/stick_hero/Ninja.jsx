@@ -1,9 +1,7 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { makeHash } from "../../services/helpers";
-import Cookies from "universal-cookie";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import {
@@ -26,22 +24,27 @@ import MInput from "../../components/Input";
 import MButton from "../../components/Button";
 import { getTournamentContract } from "../../helper_contracts/TournamentContractHelper";
 import { parse18 } from "../../helper_contracts/helpers";
-import { buyLifeAPI } from "../../services/getService";
+import { buyLifeAPI, getToyInfo } from "../../services/getService";
 import * as Yup from "yup";
 
 export default function NinjaGame({
   tour_id,
-  total,
-  life,
+  gameDetail: initialGameDetail,
   data,
-  updateTournomentDetailData,
+  jwtToken,
 }) {
-  const cookies = new Cookies();
-  const jwtToken = cookies.get("jwtToken");
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
   const [isDisabled, setIsDisabled] = useState(false);
+
+  const [gameDetailData, setAddGameDetailData] = useState();
+
+  const gameDetail = useMemo(() => {
+    return gameDetailData?.data?.tournoment_user
+      ? gameDetailData?.data?.tournoment_user
+      : initialGameDetail;
+  }, [gameDetailData, initialGameDetail]);
 
   let player = "";
   let back_str = "";
@@ -231,7 +234,7 @@ export default function NinjaGame({
       maxBodyLength: Infinity,
       url: "https://api-game.mongolnft.com/api/gamemid-web3/",
       headers: {
-        Authorization: `JWT ${jwtToken}`,
+        Authorization: `JWT ${jwtToken?.value}`,
         "Content-Type": "application/json",
       },
       data: data,
@@ -270,7 +273,7 @@ export default function NinjaGame({
           maxBodyLength: Infinity,
           url: `https://api-game.mongolnft.com/api/gamestart-web3/?tour_id=${tour_id}&toy_id=3`,
           headers: {
-            Authorization: `JWT ${jwtToken}`,
+            Authorization: `JWT ${jwtToken.value}`,
           },
           data: data,
         };
@@ -404,7 +407,7 @@ export default function NinjaGame({
               maxBodyLength: Infinity,
               url: "https://api-game.mongolnft.com/api/gameend-web3/",
               headers: {
-                Authorization: `JWT ${jwtToken}`,
+                Authorization: `JWT ${jwtToken.value}`,
                 "Content-Type": "application/json",
               },
               data: data,
@@ -750,6 +753,18 @@ export default function NinjaGame({
     updateTournomentDetailData();
   };
 
+  const updateTournomentDetailData = async () => {
+    try {
+      const toyRes = await getToyInfo({
+        id: tour_id,
+        jwtToken: jwtToken.value,
+      });
+      setAddGameDetailData(toyRes);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleBuyLife = async (values) => {
     try {
       const { count } = values;
@@ -767,8 +782,11 @@ export default function NinjaGame({
         chain: "mumbai",
         tournoment_id: data.id,
       });
-      const res = await buyLifeAPI(info);
+      await buyLifeAPI(info);
+
+      updateTournomentDetailData();
       onClose();
+
       toast({
         title: "Success",
         description: `Success`,
@@ -776,13 +794,13 @@ export default function NinjaGame({
         duration: 9000,
         isClosable: true,
       });
-      updateTournomentDetailData();
-      return res;
+
+      return null;
     } catch (error) {
       console.log(error);
       toast({
         title: "Not buy life.",
-        description: `${err.reason}`,
+        description: `${error.reason || error.data.message || error.message}`,
         status: "error",
         duration: 9000,
         isClosable: true,
@@ -796,8 +814,8 @@ export default function NinjaGame({
   });
 
   useEffect(() => {
-    life == 0 && onOpen();
-  }, [life, onOpen]);
+    gameDetail?.tournoment_live == 0 && onOpen();
+  }, [gameDetail?.tournoment_live, onOpen]);
 
   useEffect(() => {
     isDisabled && onOpen();
@@ -848,17 +866,18 @@ export default function NinjaGame({
                       text="Buy Life"
                       isLoading={props.isSubmitting}
                     />
+
+                    <MButton
+                      mt="4"
+                      w="full"
+                      text="Exit"
+                      onClick={() => router.back()}
+                      isLoading={props.isSubmitting}
+                    />
                   </Stack>
                 </Form>
               )}
             </Formik>
-
-            <MButton
-              mt="4"
-              w="full"
-              text="Exit"
-              onClick={() => router.back()}
-            />
           </AlertDialogBody>
         </AlertDialogContent>
       </AlertDialog>
@@ -886,7 +905,7 @@ export default function NinjaGame({
               fontWeight="500"
               textColor="yellow.primary"
             >
-              {total}
+              {gameDetail?.point}
             </Text>
           </Stack>
           <Stack
@@ -911,7 +930,7 @@ export default function NinjaGame({
               fontWeight="500"
               textColor="yellow.primary"
             >
-              {life}
+              {gameDetail?.tournoment_live}
             </Text>
           </Stack>
           <Stack

@@ -50,6 +50,7 @@ export class Reacteroids extends Component {
       currentScore: 0,
       inGame: false,
       showPlayButton: true,
+      // topScore: localStorage["topscore"] || 0,
     };
     this.ship = [];
     this.asteroids = [];
@@ -79,8 +80,9 @@ export class Reacteroids extends Component {
   }
 
   async componentDidMount() {
-    const { tour_id, updateTournomentDetailData, life } = this.props;
+    const { tour_id, updateTournomentDetailData } = this.props;
     this.id = tour_id;
+    this.updateTournomentDetailData = updateTournomentDetailData;
 
     try {
       if (window.ethereum) {
@@ -330,7 +332,16 @@ export class Reacteroids extends Component {
       showPlayButton: true,
     });
 
+    this.updateTournomentDetailData();
+
     this.onFinishGame(this.state.currentScore / 4);
+
+    // if (this.state.currentScore > this.state.topScore) {
+    //   this.setState({
+    //     topScore: this.state.currentScore,
+    //   });
+    //   localStorage["topscore"] = this.state.currentScore;
+    // }
   }
 
   generateAsteroids(howMany) {
@@ -405,10 +416,24 @@ export class Reacteroids extends Component {
     let endgame;
     let message;
 
+    if (this.state.currentScore <= 0) {
+      message = `Your ${Math.floor(
+        Number(this.state.currentScore / 4)
+      )} points... crazy man.`;
+    } else if (this.state.currentScore >= this.state.topScore) {
+      message = "Top score with " + this.state.currentScore + " points. Woo!";
+    } else {
+      message = this.state.currentScore + " Points though :)";
+    }
+
     if (!this.state.inGame) {
       endgame = (
         <div className="endgame">
-          <p className="font-bold">{message}</p>
+          {this.state.currentScore > 1 ? (
+            <p className="font-bold">{message}</p>
+          ) : (
+            <p className="font-bold">Let&apos;s go man!</p>
+          )}
 
           {this.state.showPlayButton && (
             <MButton
@@ -432,7 +457,7 @@ export class Reacteroids extends Component {
         )}
         {this.state.inGame && (
           <span className="score top-score">
-            Top Score: {this.state.topScore}
+            Top Score: {this.state.topScore / 4}
           </span>
         )}
         {this.state.inGame && (

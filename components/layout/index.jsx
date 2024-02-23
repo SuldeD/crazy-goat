@@ -14,12 +14,12 @@ import { Header } from "./Header";
 
 const MAX_WIDTH = "1280px";
 export const Layout = ({ children }) => {
-  const { address, isConnected } = useAccount();
-  const setAddMyAddress = useTournomentStore((state) => state.setAddMyAddress);
+  // const { address, isConnected } = useAccount();
+  // const setAddMyAddress = useTournomentStore((state) => state.setAddMyAddress);
 
-  useEffect(() => {
-    isConnected && setAddMyAddress(address);
-  }, []);
+  // useEffect(() => {
+  //   isConnected && setAddMyAddress(address);
+  // }, []);
 
   return (
     <ChakraProvider theme={theme}>

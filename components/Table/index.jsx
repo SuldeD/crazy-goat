@@ -23,13 +23,17 @@ import { getTotalPoints } from "../../services/getService";
 
 export const MTable = async ({ tournoments, initialPoints }) => {
   const [pointsData, setAddPointsData] = useState();
-  const myAddress = useTournomentStore((state) => state.myAddress);
+  const [myAddress, setMyAddress] = useState();
 
   const handleChange = async (index) => {
     const id = tournoments?.data?.tournoments[index]?.id;
     const data = await getTotalPoints({ id });
     setAddPointsData(data);
   };
+
+  useEffect(() => {
+    setMyAddress(window.ethereum.selectedAddress);
+  }, []);
 
   const points = useMemo(() => {
     return pointsData?.total_points

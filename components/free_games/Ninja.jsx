@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 import { HStack, Stack, Text, Wrap } from "@chakra-ui/react";
 import { IoGameController } from "react-icons/io5";

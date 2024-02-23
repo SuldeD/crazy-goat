@@ -121,18 +121,30 @@ export default class Ship {
     context.save();
     context.translate(this.position.x, this.position.y);
     context.rotate((this.rotation * Math.PI) / 180);
-    // context.width = "300px";
-    // context.height = "300px";
     context.strokeStyle = "#ffffff";
-    const newImage = new Image(30, 30);
-    // newImage.src = "http://localhost:5174/space_rabbit_v2.svg";
-    // newImage.w = 2;
-    // newImage.height = "24px";
-    // newImage.width = "24px";
-    // newImage.strokeStyle.width = 24;
+    const newImage = new Image(40, 40);
+    newImage.src =
+      "https://crazygoat.io/space_rabbit_v2.svg" ||
+      "http://localhost:5174/space_rabbit_v2.svg";
+
     const airH = 100;
 
-    context.drawImage(newImage, -airH / 2, -airH / 2, airH, airH);
+    context.drawImage(newImage, -airH / 1.95, -airH / 2, airH, airH);
+    // const newImage = new Image();
+    // newImage.src = "http://localhost:5174/space_rabbit_v2.svg";
+
+    // context.drawImage(newImage, -13, -10);
+
+    // Rabbit head
+    // context.lineWidth = 2;
+    // context.beginPath();
+    // context.moveTo(0, -30);
+    // context.lineTo(20, 20);
+    // context.lineTo(10, 14);
+    // context.lineTo(-10, 14);
+    // context.lineTo(-20, 20);
+    // context.closePath();
+    // context.stroke();
 
     context.restore();
   }

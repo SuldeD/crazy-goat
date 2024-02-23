@@ -1,11 +1,6 @@
-/* eslint-disable no-unused-vars */
 "use client";
 
 import { getTournamentFactoryContract } from "../../helper_contracts/TournamentFactoryContractHelper";
-import {
-  parse18,
-  convertPercentagesToWeiArray,
-} from "../../helper_contracts/helpers";
 import MButton from "../Button";
 import MInput from "../Input";
 import MText from "../Text";
@@ -13,13 +8,12 @@ import { createTournamentAPI } from "../../services/getService";
 import { Stack, Text } from "@chakra-ui/layout";
 import { Field, Form, Formik } from "formik";
 import moment from "moment";
-import { Image, Select, useToast } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import * as Yup from "yup";
-import { useState } from "react";
 
 export default function CreateTournament() {
   const toast = useToast();
-  const [selectData, setSelectData] = useState();
+  // const [selectData, setSelectData] = useState();
 
   const createTournament = async (values) => {
     try {
@@ -27,14 +21,7 @@ export default function CreateTournament() {
 
       const { tournamentFactoryWriteContract, tournamentFactoryReadContract } =
         await getTournamentFactoryContract();
-      console.log(
-        tournamentFactoryReadContract,
-        "tournamentFactoryReadContract"
-      );
-      console.log(
-        tournamentFactoryWriteContract,
-        "tournamentFactoryWriteContract"
-      );
+
       let tournamentDetails = [name, image];
       let dateEnd = moment(endTime).unix();
       let endtime = dateEnd - Math.floor(Date.now() / 1000);
@@ -253,7 +240,7 @@ export default function CreateTournament() {
             w="full"
             mt="5"
             text={"Submit"}
-            colorScheme="teal"
+            colorscheme="teal"
             isLoading={props.isSubmitting}
             type="submit"
           />

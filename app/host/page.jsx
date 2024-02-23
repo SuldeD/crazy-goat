@@ -125,7 +125,7 @@ export default function Host() {
             mt="5"
             text={"Coming soon"}
             isDisabled={true}
-            colorScheme="teal"
+            colorscheme="teal"
             isLoading={props.isSubmitting}
             type="submit"
           />

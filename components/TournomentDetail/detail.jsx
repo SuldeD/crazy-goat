@@ -19,34 +19,56 @@ import { usePathname, useRouter } from "next/navigation";
 import { AiFillHeart, AiFillStar, AiFillTrophy } from "react-icons/ai";
 import { MdAccessTimeFilled } from "react-icons/md";
 import { BsGiftFill } from "react-icons/bs";
-import { buyLifeAPI, getTournament } from "../../services/getService";
+import {
+  buyLifeAPI,
+  getTournament,
+  getToyInfo,
+} from "../../services/getService";
 import { getTournamentContract } from "../../helper_contracts/TournamentContractHelper";
 import { parse18 } from "../../helper_contracts/helpers";
 import MInput from "../Input";
 import * as Yup from "yup";
-import { useEffect, useState } from "react";
-import { useTournomentStore } from "../../lib/store";
-import { revalidateTag } from "next/cache";
+import { useEffect, useMemo, useState } from "react";
 
-export const Detail = ({ data: initialData, games, gameDetail, params }) => {
+export const Detail = ({
+  data: initialData,
+  games,
+  gameDetail: initialGameDetail,
+  params,
+  jwtToken,
+}) => {
   const router = useRouter();
   const navigate = usePathname();
   const toast = useToast();
 
-  // const setAddTournoment = useTournomentStore(
-  //   (state) => state.setAddTournoment
-  // );
-  const tournoment = useTournomentStore((state) => state.tournoment);
+  const [gameDetailData, setAddGameDetailData] = useState();
+  const [tournoment, setAddTournoment] = useState();
 
-  // const updateTournomentDetailData = async () => {
-  //   try {
-  //     const data = await getTournament(params.slag);
-  //     console.log(data, "data");
-  //     setAddTournoment(data);
-  //   } catch (error) {}
-  // };
+  const updateTournomentDetailData = async () => {
+    try {
+      const data = await getTournament(params.slag);
+      const toyRes = await getToyInfo({
+        id: params.slag,
+        jwtToken: jwtToken.value,
+      });
+      setAddTournoment(data);
+      setAddGameDetailData(toyRes);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  const data = tournoment?.length > 0 ? tournoment : initialData;
+  const data = useMemo(() => {
+    return tournoment?.data?.tournoment
+      ? tournoment?.data?.tournoment
+      : initialData;
+  }, [tournoment, initialData]);
+
+  const gameDetail = useMemo(() => {
+    return gameDetailData?.data?.tournoment_user
+      ? gameDetailData?.data?.tournoment_user
+      : initialGameDetail;
+  }, [gameDetailData, initialGameDetail]);
 
   const [countdown, setCountdown] = useState({
     days: 0,
@@ -100,7 +122,9 @@ export const Detail = ({ data: initialData, games, gameDetail, params }) => {
         tournoment_id: data.id,
       });
 
-      const res = await buyLifeAPI(info);
+      await buyLifeAPI(info);
+
+      updateTournomentDetailData();
 
       toast({
         title: "Success",
@@ -109,14 +133,13 @@ export const Detail = ({ data: initialData, games, gameDetail, params }) => {
         duration: 9000,
         isClosable: true,
       });
-      revalidateTag("toy");
-      // updateTournomentDetailData();
-      return res;
+
+      return null;
     } catch (error) {
       console.log(error);
       toast({
         title: "Not buy life.",
-        description: `${err.reason}`,
+        description: `${error.reason || error.data.message || error.message}`,
         status: "error",
         duration: 9000,
         isClosable: true,

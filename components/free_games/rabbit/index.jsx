@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Reacteroids } from "./Reacteroids";
 import "./style.css";

@@ -24,9 +24,12 @@ import MButton from "../../Button";
 import HeadingText from "../../HeadingText";
 import Text from "../../Text";
 import { FiInbox } from "react-icons/fi";
+import { useAccount } from "wagmi";
+import { ConnectKitButton } from "connectkit";
 
-export function MCard({ id, Tg }) {
+export function MCard({ id, Tg, history }) {
   const router = useRouter();
+
   const [countdown, setCountdown] = useState({
     days: 0,
     hours: 0,
@@ -133,14 +136,25 @@ export function MCard({ id, Tg }) {
           >
             {renderer()}
 
-            <MButton
-              text={"View Games"}
-              w={["full", "100%", "50%", "20%"]}
-              onClick={() => {
-                verifyMessage();
-                router.push(`tournament/${Tg.id}`);
+            <ConnectKitButton.Custom>
+              {({ isConnected, show, address }) => {
+                return (
+                  <MButton
+                    text={
+                      isConnected === false ? "Connect Wallet" : "View Games"
+                    }
+                    w={["full", "100%", "50%", "20%"]}
+                    onClick={() => {
+                      isConnected === false && show();
+                      address === undefined && show();
+                      !history && isConnected === true && verifyMessage();
+                      isConnected === true &&
+                        router.push(`tournament/${Tg.id}`);
+                    }}
+                  />
+                );
               }}
-            />
+            </ConnectKitButton.Custom>
           </Flex>
         </Stack>
       </CardBody>
@@ -164,7 +178,7 @@ export default function Tournaments({ products }) {
           gap="12"
           mt="4"
           variant="unstyled"
-          colorScheme="green"
+          colorscheme="green"
           justifyContent={["center", "start", "start"]}
           w="full"
         >
@@ -267,7 +281,7 @@ export default function Tournaments({ products }) {
                   .map((Tg, id) => {
                     return (
                       <WrapItem w="full" key={id}>
-                        <MCard id={id} Tg={Tg} />
+                        <MCard id={id} Tg={Tg} history={true} />
                       </WrapItem>
                     );
                   })

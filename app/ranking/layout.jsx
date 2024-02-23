@@ -6,11 +6,7 @@ import { Stack } from "@chakra-ui/react";
 import Loader from "../../components/Loader";
 import MText from "../../components/Text";
 
-export default async function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function Layout({ children }) {
   return (
     <div className="w-full gap-10">
       <Stack align="center" my="10">

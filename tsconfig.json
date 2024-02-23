@@ -18,6 +18,15 @@
       }
     ]
   },
-  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "app/ranking/loading.jsx",
+    "app/ranking/layout.jsx",
+    "app/ranking/page.jsx",
+    "components/provider.tsx"
+  ],
   "exclude": ["node_modules"]
 }

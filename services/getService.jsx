@@ -1,4 +1,5 @@
 import axios from "axios";
+// import { revalidateTag } from "next/cache";
 // import { revalidatePath } from "next/cache";
 import Cookies from "universal-cookie";
 
@@ -57,12 +58,10 @@ const createTournamentAPI = async (data) => {
 };
 
 const getToyInfo = async ({ id, jwtToken }) => {
-  const fetchCache = "only-no-store";
-
   const res = await fetch(`${GAME_DOMAIN}api/tournoments-user-web3/`, {
     next: { tags: ["toy"] },
     method: "POST",
-    // cache: "force-cache",
+    cache: "no-cache",
     headers: {
       Authorization: `JWT ${jwtToken}`,
       "Content-Type": "application/json",
@@ -115,9 +114,7 @@ const buyLifeAPI = async (data) => {
 
   try {
     const response = await axios.request(config);
-    console.log(JSON.stringify(response.data));
-
-    revalidateTag("toy");
+    console.log(JSON.stringify(response.data), "server");
 
     return response;
   } catch (error) {
