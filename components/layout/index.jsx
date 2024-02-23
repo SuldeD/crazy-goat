@@ -14,11 +14,11 @@ import { Header } from "./Header";
 
 const MAX_WIDTH = "1280px";
 export const Layout = ({ children }) => {
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const setAddMyAddress = useTournomentStore((state) => state.setAddMyAddress);
 
   useEffect(() => {
-    setAddMyAddress(address);
+    isConnected && setAddMyAddress(address);
   }, []);
 
   return (
