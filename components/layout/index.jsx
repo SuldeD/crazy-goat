@@ -1,5 +1,3 @@
-"use client";
-
 import {
   HStack,
   Stack,
@@ -7,12 +5,22 @@ import {
   Flex,
   ChakraProvider,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { useAccount } from "wagmi";
+import { useTournomentStore } from "../../lib/store";
 import { theme } from "../theme";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
 
 const MAX_WIDTH = "1280px";
 export const Layout = ({ children }) => {
+  const { address } = useAccount();
+  const setAddMyAddress = useTournomentStore((state) => state.setAddMyAddress);
+
+  useEffect(() => {
+    setAddMyAddress(address);
+  }, []);
+
   return (
     <ChakraProvider theme={theme}>
       <Container w="100%" maxW={MAX_WIDTH} px="4">

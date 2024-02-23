@@ -1,5 +1,3 @@
-"use client";
-
 import MText from "../../components/Text";
 import Tournaments from "../../components/main/Tournaments/index";
 import { getTournaments, getToys } from "../../services/getService";
@@ -7,9 +5,8 @@ import { Flex, Stack } from "@chakra-ui/react";
 import ToysCard from "../../components/ToysCard";
 
 export default async function Games() {
-  const [data, toys] = await Promise.all([getTournaments(), getToys()]);
-
-  if (!data || !toys) return null;
+  const data = await getTournaments();
+  const toys = await getToys();
 
   return (
     <Stack w="full">

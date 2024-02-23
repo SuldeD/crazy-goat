@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-async-client-component */
 "use client";
 
 import { useState } from "react";

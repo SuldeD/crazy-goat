@@ -12,6 +12,7 @@ export async function getTournaments() {
     next: { tags: ["tournaments"] },
     cache: "no-store",
   });
+  // const res = await fetch(`${GAME_DOMAIN}api/tournoments-web3/?type=all`);
 
   if (!res.ok) {
     return new Error("Failed to fetch data");
@@ -56,10 +57,12 @@ const createTournamentAPI = async (data) => {
 };
 
 const getToyInfo = async ({ id, jwtToken }) => {
+  const fetchCache = "only-no-store";
+
   const res = await fetch(`${GAME_DOMAIN}api/tournoments-user-web3/`, {
     next: { tags: ["toy"] },
     method: "POST",
-    cache: "no-store",
+    // cache: "force-cache",
     headers: {
       Authorization: `JWT ${jwtToken}`,
       "Content-Type": "application/json",
@@ -85,13 +88,14 @@ async function getTournament(id) {
   if (!res.ok) {
     return new Error("Failed to fetch data");
   }
+
   return res.json();
 }
 
 const getToys = async () => {
-  const res = await fetch(`https://api-game.mongolnft.com/api/toys/`, {
+  const res = await fetch(`${GAME_DOMAIN}api/toys/`, {
     method: "GET",
-    cache: "no-cache",
+    cache: "no-store",
   });
 
   return res.json();
@@ -112,6 +116,8 @@ const buyLifeAPI = async (data) => {
   try {
     const response = await axios.request(config);
     console.log(JSON.stringify(response.data));
+
+    revalidateTag("toy");
 
     return response;
   } catch (error) {

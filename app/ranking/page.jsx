@@ -1,31 +1,14 @@
-"use client";
-
 import MTable from "../../components/Table";
-import MText from "../../components/Text";
+import { getTotalPoints, getTournaments } from "../../services/getService";
 
-import { Stack } from "@chakra-ui/react";
-import { useState } from "react";
-import { useEffect } from "react";
-
-export default function Ranking() {
-  const [pointsData, setPoints] = useState(null);
-  const [myAddress, setMyAddress] = useState(null);
-
-  useEffect(() => {
-    setMyAddress(window?.ethereum?.selectedAddress);
-  }, []);
+export default async function Ranking() {
+  const tournoments = await getTournaments();
+  const pointId = tournoments?.data?.tournoments[0]?.id;
+  const initialPoints = await getTotalPoints({ id: pointId });
 
   return (
     <div className="w-full gap-10">
-      <Stack align="center" my="10">
-        <MText title={true} text={"Ranking"} />
-      </Stack>
-
-      <MTable
-        pointsData={pointsData}
-        setPoints={setPoints}
-        myAddress={myAddress}
-      />
+      <MTable tournoments={tournoments} initialPoints={initialPoints} />
     </div>
   );
 }

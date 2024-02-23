@@ -1,4 +1,5 @@
-import { getTournaments, getTotalPoints } from "../../services/getService";
+"use client";
+
 import {
   Flex,
   Stack,
@@ -16,19 +17,25 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import { useEffect, useMemo, useState } from "react";
+import { useTournomentStore } from "../../lib/store";
+import { getTotalPoints } from "../../services/getService";
 
-export const MTable = async ({ setPoints, pointsData, myAddress }) => {
-  const tournoments = await getTournaments();
-  const initialPoints = await getTotalPoints({ id: "32" });
+export const MTable = async ({ tournoments, initialPoints }) => {
+  const [pointsData, setAddPointsData] = useState();
+  const myAddress = useTournomentStore((state) => state.myAddress);
 
   const handleChange = async (index) => {
     const id = tournoments?.data?.tournoments[index]?.id;
-    setPoints(await getTotalPoints({ id }));
+    const data = await getTotalPoints({ id });
+    setAddPointsData(data);
   };
 
-  const points = pointsData?.total_points
-    ? pointsData?.total_points
-    : initialPoints?.total_points;
+  const points = useMemo(() => {
+    return pointsData?.total_points
+      ? pointsData?.total_points
+      : initialPoints?.total_points;
+  }, [pointsData, initialPoints]);
 
   return (
     <TableContainer mt="5">

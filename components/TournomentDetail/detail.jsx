@@ -1,7 +1,7 @@
 "use client";
 
-import MButton from "../../components/Button";
-import HeadingText from "../../components/HeadingText";
+import MButton from "../Button";
+import HeadingText from "../HeadingText";
 import {
   Card,
   CardBody,
@@ -19,25 +19,34 @@ import { usePathname, useRouter } from "next/navigation";
 import { AiFillHeart, AiFillStar, AiFillTrophy } from "react-icons/ai";
 import { MdAccessTimeFilled } from "react-icons/md";
 import { BsGiftFill } from "react-icons/bs";
-import { buyLifeAPI } from "../../services/getService";
+import { buyLifeAPI, getTournament } from "../../services/getService";
 import { getTournamentContract } from "../../helper_contracts/TournamentContractHelper";
 import { parse18 } from "../../helper_contracts/helpers";
-import MInput from "../../components/Input";
+import MInput from "../Input";
 import * as Yup from "yup";
 import { useEffect, useState } from "react";
+import { useTournomentStore } from "../../lib/store";
+import { revalidateTag } from "next/cache";
 
-export const Detail = ({
-  data: initialData,
-  games,
-  gameDetail,
-  updateTournomentDetailData,
-  tournoment,
-}) => {
+export const Detail = ({ data: initialData, games, gameDetail, params }) => {
   const router = useRouter();
   const navigate = usePathname();
   const toast = useToast();
 
-  const data = tournoment.length > 0 ? tournoment : initialData;
+  // const setAddTournoment = useTournomentStore(
+  //   (state) => state.setAddTournoment
+  // );
+  const tournoment = useTournomentStore((state) => state.tournoment);
+
+  // const updateTournomentDetailData = async () => {
+  //   try {
+  //     const data = await getTournament(params.slag);
+  //     console.log(data, "data");
+  //     setAddTournoment(data);
+  //   } catch (error) {}
+  // };
+
+  const data = tournoment?.length > 0 ? tournoment : initialData;
 
   const [countdown, setCountdown] = useState({
     days: 0,
@@ -100,8 +109,8 @@ export const Detail = ({
         duration: 9000,
         isClosable: true,
       });
-      // revalidateTag("tournaments");
-      updateTournomentDetailData();
+      revalidateTag("toy");
+      // updateTournomentDetailData();
       return res;
     } catch (error) {
       console.log(error);

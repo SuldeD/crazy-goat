@@ -222,8 +222,8 @@ export default function Tournaments({ products }) {
               justify="center"
               minH="20vh"
             >
-              {products?.data?.tournoments.length > 0 &&
-              products?.data?.tournoments?.filter(
+              {products?.data?.tournoments?.length > 0 &&
+              products?.data?.tournoments?.some(
                 (tg) => tg.status === "active"
               ) ? (
                 products?.data?.tournoments
@@ -258,7 +258,7 @@ export default function Tournaments({ products }) {
               justify="center"
               minH="20vh"
             >
-              {products?.data?.tournoments.length > 0 &&
+              {products?.data?.tournoments?.length > 0 &&
               products?.data?.tournoments?.some(
                 (tg) => tg.status === "history"
               ) ? (

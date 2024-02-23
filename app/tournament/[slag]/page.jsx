@@ -1,24 +1,21 @@
-"use client";
-
-import { Detail } from "../detail";
+import { unstable_cache } from "next/cache";
+import { cookies } from "next/headers";
+import { Detail } from "../../../components/TournomentDetail/detail";
 import { getTournament, getToyInfo } from "../../../services/getService";
-import { useState } from "react";
-import Cookies from "universal-cookie";
+
+const getCachedToy = unstable_cache(
+  async (id, jwtToken) => getToyInfo({ id, jwtToken }),
+  ["toy"]
+);
 
 export default async function Tournament({ params }) {
-  const cookies = new Cookies();
-  const jwtToken = cookies.get("jwtToken");
-  const [tournoment, setTournoment] = useState("");
+  const cookieStore = cookies();
+  const jwtToken = cookieStore.get("jwtToken");
 
-  const toyRes = await getToyInfo({ id: params.slag, jwtToken: jwtToken });
-  const data = await getTournament(params.slag);
+  const tourData = getTournament(params.slag);
+  const toyResData = getCachedToy(params.slag, jwtToken.value);
 
-  const updateTournomentDetailData = async () => {
-    try {
-      const data = await getTournament(params.slag);
-      setTournoment(data);
-    } catch (error) {}
-  };
+  const [toyRes, data] = await Promise.all([toyResData, tourData]);
 
   return (
     <div>
@@ -26,8 +23,7 @@ export default async function Tournament({ params }) {
         data={data?.data?.tournoment}
         games={data?.data?.tour_toy_configs}
         gameDetail={toyRes?.data?.tournoment_user}
-        updateTournomentDetailData={updateTournomentDetailData}
-        tournoment={tournoment}
+        params={params}
       />
     </div>
   );
