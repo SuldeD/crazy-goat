@@ -117,12 +117,7 @@ export function MCard({ id, Tg }) {
 
             <Flex justifyContent="space-between" mt="10px">
               <Text text="Prize pool" />
-              <Text
-                sub={true}
-                text={`${
-                  Number((Tg?.total_price).toString().slice(0, 5)) + 70
-                } MATIC`}
-              />
+              <Text sub={true} text={`${70} MATIC`} />
             </Flex>
             <Flex justifyContent="space-between">
               <Text text="Winner's Percentage of Reward" />

@@ -317,7 +317,7 @@ export const Detail = ({
                   fontWeight="500"
                   textColor="yellow.primary"
                 >
-                  {Number(data?.total_price?.toString().slice(0, 5)) + 70}
+                  {70}
                 </Text>
                 <Text
                   fontFamily="primary"
