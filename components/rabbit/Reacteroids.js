@@ -4,12 +4,8 @@ import Ship from "./Ship";
 import Asteroid from "./Asteroid";
 import { randomNumBetweenExcluding } from "./helpers";
 import MButton from "../../components/Button";
-import Cookies from "universal-cookie";
 import axios from "axios";
 import { makeHash } from "../flappy_wolf/utils/helpers";
-
-const cookies = new Cookies();
-const jwtToken = cookies.get("jwtToken");
 
 const KEY = {
   LEFT: 37,
@@ -80,9 +76,10 @@ export class Reacteroids extends Component {
   }
 
   async componentDidMount() {
-    const { tour_id, updateTournomentDetailData } = this.props;
+    const { tour_id, updateTournomentDetailData, jwtToken } = this.props;
     this.id = tour_id;
     this.updateTournomentDetailData = updateTournomentDetailData;
+    this.jwtToken = jwtToken?.value;
 
     try {
       if (window.ethereum) {
@@ -191,7 +188,7 @@ export class Reacteroids extends Component {
       maxBodyLength: Infinity,
       url: `https://api-game.mongolnft.com/api/gamestart-web3/?tour_id=${this.id}&toy_id=4`,
       headers: {
-        Authorization: `JWT ${jwtToken}`,
+        Authorization: `JWT ${this.jwtToken}`,
       },
       data: data,
     };
@@ -259,13 +256,15 @@ export class Reacteroids extends Component {
       back_str: "",
     });
     console.log("check_str: ", check_str);
+    console.log("this.state.currentScore: ", this.state.currentScore);
+    console.log("jwtToken: ", this.jwtToken);
 
     let config2 = {
       method: "post",
       maxBodyLength: Infinity,
       url: "https://api-game.mongolnft.com/api/gamemid-web3/",
       headers: {
-        Authorization: `JWT ${jwtToken}`,
+        Authorization: `JWT ${this.jwtToken}`,
         "Content-Type": "application/json",
       },
       data: data,
@@ -273,10 +272,10 @@ export class Reacteroids extends Component {
     axios
       .request(config2)
       .then((response) => {
-        mid_check_str = response.data.data.mid_check_str;
+        mid_check_str = response?.data?.data?.mid_check_str;
         mid_check_str_history.push(mid_check_str);
         console.log(mid_check_str_history.length);
-        console.log(JSON.stringify(response.data));
+        console.log(JSON.stringify(response?.data));
       })
       .catch((error) => {
         console.log(error);
@@ -290,7 +289,7 @@ export class Reacteroids extends Component {
         user_id.toString(),
         score.toString(),
         check_str,
-        ...mid_check_str_history.map((item) => item.toString()),
+        ...mid_check_str_history.map((item) => item),
       ];
       let back_str = await makeHash(makeHashParams, score);
       console.log("life: ", this.life);
@@ -308,7 +307,7 @@ export class Reacteroids extends Component {
         maxBodyLength: Infinity,
         url: "https://api-game.mongolnft.com/api/gameend-web3/",
         headers: {
-          Authorization: `JWT ${jwtToken}`,
+          Authorization: `JWT ${this.jwtToken}`,
           "Content-Type": "application/json",
         },
         data: data,

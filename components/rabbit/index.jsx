@@ -37,6 +37,7 @@ const Rabbit = ({ tour_id, gameDetail: initialGameDetail, data, jwtToken }) => {
   const toast = useToast();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const [gameDetailData, setAddGameDetailData] = useState();
 
   const gameDetail = useMemo(() => {
@@ -236,6 +237,7 @@ const Rabbit = ({ tour_id, gameDetail: initialGameDetail, data, jwtToken }) => {
             life={gameDetail?.tournoment_live}
             data={data}
             onDataFromRabbit={sendDataToReacteroids}
+            jwtToken={jwtToken}
           />
         </div>
       </Flex>

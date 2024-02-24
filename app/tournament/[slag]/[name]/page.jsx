@@ -13,6 +13,13 @@ export default async function Tournament({ params }) {
     jwtToken: jwtToken?.value,
   });
 
+  if (toyRes === "Failed" || !data.data) {
+    return (
+      <div className="mx-auto flex justify-center">
+        <p className="text-white">Connect wallet pls!</p>
+      </div>
+    );
+  }
   return (
     <div className="w-full">
       {params.name == "StickNinja" && (

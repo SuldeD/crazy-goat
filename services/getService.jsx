@@ -70,7 +70,7 @@ const getToyInfo = async ({ id, jwtToken }) => {
   });
 
   if (!res.ok) {
-    return new Error("Failed to fetch data");
+    return "Failed";
   }
 
   return res.json();

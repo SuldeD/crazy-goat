@@ -9,8 +9,16 @@ export default async function Tournament({ params }) {
   const data = await getTournament(params.slag);
   const toyRes = await getToyInfo({
     id: params.slag,
-    jwtToken: jwtToken.value,
+    jwtToken: jwtToken?.value,
   });
+
+  if (toyRes === "Failed" || !data.data) {
+    return (
+      <div className="mx-auto flex justify-center">
+        <p className="text-white">Connect wallet pls!</p>
+      </div>
+    );
+  }
 
   return (
     <div>

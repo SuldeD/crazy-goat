@@ -24,10 +24,9 @@ import MButton from "../../Button";
 import HeadingText from "../../HeadingText";
 import Text from "../../Text";
 import { FiInbox } from "react-icons/fi";
-import { useAccount } from "wagmi";
 import { ConnectKitButton } from "connectkit";
 
-export function MCard({ id, Tg, history }) {
+export function MCard({ id, Tg }) {
   const router = useRouter();
 
   const [countdown, setCountdown] = useState({
@@ -147,7 +146,8 @@ export function MCard({ id, Tg, history }) {
                     onClick={() => {
                       isConnected === false && show();
                       address === undefined && show();
-                      !history && isConnected === true && verifyMessage();
+                      isConnected === true && verifyMessage();
+
                       isConnected === true &&
                         router.push(`tournament/${Tg.id}`);
                     }}
@@ -281,7 +281,7 @@ export default function Tournaments({ products }) {
                   .map((Tg, id) => {
                     return (
                       <WrapItem w="full" key={id}>
-                        <MCard id={id} Tg={Tg} history={true} />
+                        <MCard id={id} Tg={Tg} />
                       </WrapItem>
                     );
                   })
