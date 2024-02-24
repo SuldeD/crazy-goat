@@ -317,7 +317,7 @@ export const Detail = ({
                   fontWeight="500"
                   textColor="yellow.primary"
                 >
-                  {data?.total_price?.toString().slice(0, 5)}
+                  {Number(data?.total_price?.toString().slice(0, 5)) + 70}
                 </Text>
                 <Text
                   fontFamily="primary"
@@ -630,7 +630,7 @@ export const Detail = ({
                         fontWeight="700"
                         color="pink.primary"
                       >
-                        {gm?.point_value_config}
+                        {gm?.toy?.id === "4" ? "0.1" : gm?.point_value_config}
                       </Text>
                     </HStack>
 

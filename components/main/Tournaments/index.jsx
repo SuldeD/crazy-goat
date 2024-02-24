@@ -119,7 +119,9 @@ export function MCard({ id, Tg }) {
               <Text text="Prize pool" />
               <Text
                 sub={true}
-                text={`${(Tg?.total_price).toString().slice(0, 5)} MATIC`}
+                text={`${
+                  Number((Tg?.total_price).toString().slice(0, 5)) + 70
+                } MATIC`}
               />
             </Flex>
             <Flex justifyContent="space-between">
@@ -164,6 +166,8 @@ export function MCard({ id, Tg }) {
 
 export default function Tournaments({ products }) {
   const [tab, setTab] = useState();
+
+  console.log(products?.data?.tournoments[0], "tourrr");
 
   return (
     <Stack mt="32">
@@ -240,7 +244,7 @@ export default function Tournaments({ products }) {
               products?.data?.tournoments?.some(
                 (tg) => tg.status === "active"
               ) ? (
-                products?.data?.tournoments
+                [products?.data?.tournoments[0]]
                   ?.filter((tg) => tg.status === "active")
                   .map((Tg, id) => {
                     return (
@@ -276,7 +280,7 @@ export default function Tournaments({ products }) {
               products?.data?.tournoments?.some(
                 (tg) => tg.status === "history"
               ) ? (
-                products?.data?.tournoments
+                [products?.data?.tournoments[0]]
                   ?.filter((tg) => tg.status === "history")
                   .map((Tg, id) => {
                     return (

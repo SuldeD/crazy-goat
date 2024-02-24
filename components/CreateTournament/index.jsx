@@ -67,12 +67,12 @@ export default function CreateTournament() {
         description: desc,
         image: image,
         token_id: 1,
-        live_price: 0.01,
+        live_price: 0.02,
         start_datetime: `${outputPresent}59`,
         end_datetime: output,
         toy_ids: [1, 3, 4],
         nfts: [],
-        winner_percentage: 90,
+        winner_percentage: 100,
       });
 
       const res = await createTournamentAPI(data);
