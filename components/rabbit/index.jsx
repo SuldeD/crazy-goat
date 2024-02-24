@@ -64,7 +64,7 @@ const Rabbit = ({ tour_id, gameDetail: initialGameDetail, data, jwtToken }) => {
       const { tournamentWriteContract } = await getTournamentContract(
         data.address
       );
-      const price = parse18(parseFloat(count / 100));
+      const price = parse18(parseFloat(count / 50));
       const tx = await tournamentWriteContract.deposit({
         value: price,
       });

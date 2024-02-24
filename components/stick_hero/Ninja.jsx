@@ -771,7 +771,7 @@ export default function NinjaGame({
       let { tournamentWriteContract } = await getTournamentContract(
         data.address
       );
-      let price = parse18(parseFloat(count / 100));
+      let price = parse18(parseFloat(count / 50));
       const tx = await tournamentWriteContract.deposit({
         value: price,
       });

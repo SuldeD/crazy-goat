@@ -46,7 +46,7 @@ export const MTable = async ({ tournoments, initialPoints }) => {
       <Stack w="full">
         <Tabs variant="unstyled" colorScheme="green" onChange={handleChange}>
           <TabList gap="14" ms="8">
-            {tournoments?.data?.tournoments?.map((dt, id) => {
+            {[tournoments?.data?.tournoments[0]]?.map((dt, id) => {
               return (
                 <Tab
                   key={id}
@@ -78,7 +78,7 @@ export const MTable = async ({ tournoments, initialPoints }) => {
             })}
           </TabList>
           <TabPanels w="full" mt="4">
-            {tournoments?.data?.tournoments?.map((TG, id) => {
+            {[tournoments?.data?.tournoments[0]]?.map((TG, id) => {
               return (
                 <TabPanel key={id}>
                   <TabPanel>
