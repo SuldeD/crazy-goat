@@ -2,7 +2,7 @@ import { createConfig } from "wagmi";
 import { getDefaultConfig } from "connectkit";
 import { polygonMumbai, polygon } from "wagmi/chains";
 
-const chains = [polygonMumbai, polygon];
+const chains = [polygonMumbai];
 
 const config = createConfig(
   getDefaultConfig({
