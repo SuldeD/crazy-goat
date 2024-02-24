@@ -251,12 +251,15 @@ export class Reacteroids extends Component {
     let data = JSON.stringify({
       tour_id: this.id,
       toy_id: 4,
-      point: this.state.currentScore,
+      point: Math.floor(Number(this.state.currentScore / 10)),
       check_str: check_str,
       back_str: "",
     });
     console.log("check_str: ", check_str);
-    console.log("this.state.currentScore: ", this.state.currentScore);
+    console.log(
+      "this.state.currentScore: ",
+      Math.floor(Number(this.state.currentScore))
+    );
     console.log("jwtToken: ", this.jwtToken);
 
     let config2 = {
@@ -333,7 +336,7 @@ export class Reacteroids extends Component {
 
     this.updateTournomentDetailData();
 
-    this.onFinishGame(this.state.currentScore / 4);
+    this.onFinishGame(Math.floor(Number(this.state.currentScore / 10)));
 
     // if (this.state.currentScore > this.state.topScore) {
     //   this.setState({
@@ -417,12 +420,16 @@ export class Reacteroids extends Component {
 
     if (this.state.currentScore <= 0) {
       message = `Your ${Math.floor(
-        Number(this.state.currentScore / 4)
+        Number(this.state.currentScore / 10)
       )} points... crazy man.`;
     } else if (this.state.currentScore >= this.state.topScore) {
-      message = "Top score with " + this.state.currentScore + " points. Woo!";
+      message =
+        "Top score with " +
+        Math.floor(Number(this.state.currentScore / 10)) +
+        " points. Woo!";
     } else {
-      message = this.state.currentScore + " Points though :)";
+      message =
+        Math.floor(Number(this.state.currentScore / 10)) + " Points though :)";
     }
 
     if (!this.state.inGame) {

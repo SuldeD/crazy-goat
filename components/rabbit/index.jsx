@@ -104,7 +104,7 @@ const Rabbit = ({ tour_id, gameDetail: initialGameDetail, data, jwtToken }) => {
   };
 
   const lifeSchema = Yup.object().shape({
-    count: Yup.string().required("Required"),
+    count: Yup.number().min(2).required("Required"),
   });
 
   useEffect(() => {

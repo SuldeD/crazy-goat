@@ -810,7 +810,7 @@ export default function NinjaGame({
   };
 
   const lifeSchema = Yup.object().shape({
-    count: Yup.string().required("Required"),
+    count: Yup.number().min(2).required("Required"),
   });
 
   useEffect(() => {
@@ -825,7 +825,12 @@ export default function NinjaGame({
     <div className="w-full">
       <AlertDialog motionPreset="slideInBottom" isOpen={isOpen} isCentered>
         <AlertDialogOverlay />
-        <AlertDialogContent bg="black" rounded="20px" p="5">
+        <AlertDialogContent
+          bg="black"
+          rounded="20px"
+          p="5"
+          border={"1px solid white"}
+        >
           <AlertDialogHeader textColor="white">Buy life</AlertDialogHeader>
           <AlertDialogBody>
             <Text mb="3" fontFamily="primary" fontSize="16px" color="white">

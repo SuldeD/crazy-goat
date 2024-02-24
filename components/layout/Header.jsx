@@ -100,22 +100,22 @@ export const Header = () => {
         { label: "Host", href: "/host" },
       ];
 
-  const shouldExecuteVerifyMessage = () => {
-    const lastExecutionTime = localStorage.getItem("lastExecutionTime");
-    const currentTime = Date.now();
+  // const shouldExecuteVerifyMessage = () => {
+  //   const lastExecutionTime = localStorage.getItem("lastExecutionTime");
+  //   const currentTime = Date.now();
 
-    if (!lastExecutionTime) {
-      return true;
-    }
-    return currentTime - lastExecutionTime > 1 * 60 * 60 * 1000;
-  };
+  //   if (!lastExecutionTime) {
+  //     return true;
+  //   }
+  //   return currentTime - lastExecutionTime > 1 * 60 * 60 * 1000;
+  // };
 
-  useEffect(() => {
-    if (isWalletConnected && shouldExecuteVerifyMessage()) {
-      verifyMessage();
-      localStorage.setItem("lastExecutionTime", Date.now().toString());
-    }
-  }, [isWalletConnected]);
+  // useEffect(() => {
+  //   if (isWalletConnected && shouldExecuteVerifyMessage()) {
+  //     verifyMessage();
+  //     localStorage.setItem("lastExecutionTime", Date.now().toString());
+  //   }
+  // }, [isWalletConnected]);
 
   return (
     <Stack w="100%" gap="22px" alignItems="center">

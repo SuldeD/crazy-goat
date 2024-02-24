@@ -6,9 +6,9 @@ const nextConfig = {
   experimental: {
     typedRoutes: true,
   },
-  // compiler: {
-  //   removeConsole: true,
-  // },
+  compiler: {
+    removeConsole: true,
+  },
 };
 
 module.exports = nextConfig;

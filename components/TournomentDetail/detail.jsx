@@ -149,7 +149,7 @@ export const Detail = ({
   };
 
   const lifeSchema = Yup.object().shape({
-    count: Yup.string().required("Required"),
+    count: Yup.number().min(2).required("Required"),
   });
 
   const renderer = () => {
@@ -214,6 +214,34 @@ export const Detail = ({
         >
           {data?.description}
         </Text>
+      </GridItem>
+
+      <GridItem colSpan={11} mb="1" ms="1" mt="5">
+        <Flex gap={4}>
+          <Text
+            fontFamily="primary"
+            fontSize="32px"
+            fontWeight="500"
+            textColor="white"
+          >
+            Free Testnet MATIC
+          </Text>
+          <Text
+            fontFamily="primary"
+            fontSize="24px"
+            cursor="pointer"
+            fontWeight="500"
+            textColor="yellow.primary"
+            onClick={() => {
+              window.open(
+                "https://www.alchemy.com/faucets/polygon-mumbai",
+                "_blank"
+              );
+            }}
+          >
+            Click here
+          </Text>
+        </Flex>
       </GridItem>
 
       <GridItem colSpan={12} mt="5">
@@ -358,10 +386,11 @@ export const Detail = ({
                 your purchased lives will be displayed under the "Life" section.`}
               </Text>
             </Stack>
+
             <Stack>
               <Formik
                 validationSchema={lifeSchema}
-                initialValues={{ count: "" }}
+                initialValues={{ count: 0 }}
                 onSubmit={async (values) => {
                   await handleBuyLife(values);
                   actions.setSubmitting(false);
@@ -470,6 +499,7 @@ export const Detail = ({
           )}
         </Flex>
       </GridItem>
+
       <GridItem colSpan={12} mt="16">
         <Stack>
           <HeadingText text="Games" title={true} />
